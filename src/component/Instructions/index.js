@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: '4%'
     },
+    instructionContainer:{
+        paddingBottom: '5%'
+    },
     title: {
         fontFamily: 'Montserrat_500Medium',
         fontSize: 20,
