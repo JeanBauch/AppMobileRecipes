@@ -7,8 +7,8 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 
 # Como Usar
 -> Clone o projeto
-git clone https://github.com/JeanBauch/AppMobileRecipes
+---> git clone https://github.com/JeanBauch/AppMobileRecipes
 
 -> De "yarn" para instalacao das dependencias
-yarn
+---> yarn
 
