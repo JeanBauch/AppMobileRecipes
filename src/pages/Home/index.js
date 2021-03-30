@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
-import { Modalize } from 'react-native-modalize'
+
+import { useNavigation } from '@react-navigation/native';
+import { Modalize } from 'react-native-modalize';
 
 import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
@@ -11,8 +12,9 @@ export default function Home() {
   const navigation = useNavigation();
 
   const [category, setCategory] = useState([]);
-
+  const [area, setArea] = useState([]);
   const { detail, changeDetail } = useDetail();
+  const [checked, setChecked] = useState(false);
 
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
@@ -23,35 +25,34 @@ export default function Home() {
     modalizeRefArea.current?.open();
   };
 
-  const Item = ( {title} ) => {
-    return(
-      <View style={{ padding: 20, marginVertical: 8, marginHorizontal: 16 }}>
-        <Text style={{ fontSize: 24 }}>{title}</Text>
-      </View>
-    )
-  };
+  useEffect (() => {
+    getCategory();
+    getArea();
+  }, []) 
 
-  const renderItem = ( { item } ) => (
-      <Item title={item.name}/>
-  );
+  const getCategory = async () => {
+    const {data} = await api.get("categories.php");
+    
+    const auxCategory = data.categories.map( (category) => {
+      return { 
+        id: category.idCategory,
+        name: category.strCategory,
+        img: category.strCategoryThumb,
+      }
+    } )
+    setCategory(auxCategory);
+  }
 
-    useEffect (() => {
-      getCategory();
-    }, []) 
+  const getArea = async () => {
+    const { data } = await api.get("list.php?a=list");
 
-    const getCategory = async () => {
-      const {data} = await api.get("categories.php");
-      
-      const auxCategory = data.categories.map( (category) => {
-        return { 
-          id: category.idCategory,
-          name: category.strCategory,
-          img: category.strCategoryThumb,
-        }
-      } )
-      setCategory(auxCategory);
-      console.log(auxCategory);
-    }
+    const auxArea = data.meals.map( (area) => {
+      return {
+        name: area.strArea,
+      }
+    } )
+    setArea(auxArea);
+  }
 
  return (
    <View style={styles.container}>
@@ -158,28 +159,41 @@ export default function Home() {
               <Text style = { styles.textCheck }>
                 {c.name}
               </Text>
+
             </View>
           </TouchableOpacity>
-
       </ScrollView>
     ) )}
     
     <TouchableOpacity style={styles.confirmCheck}>
         <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
     </TouchableOpacity>
-      {/* <FlatList
-        data={category}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        scrollEnabled={true}
-      /> */}
+
     </Modalize>
     
     <Modalize
       ref={modalizeRefArea}
       snapPoint={450}
     >
-      <Text>Lista de Area</Text>
+      <Text style={styles.titleFilter}>Lista de Area</Text>
+
+      {area.map( (a) => (
+      <ScrollView key={a.id}>
+        <TouchableOpacity style = {styles.checkContainer}>
+          <View style={{ flexDirection: 'row'}}>
+            <Text style = { styles.textCheck }>
+              {a.name}
+            </Text>
+
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+    ) )}
+    
+    <TouchableOpacity style={styles.confirmCheck}>
+      <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
+    </TouchableOpacity>
+
     </Modalize>
 
   </View>
@@ -232,7 +246,7 @@ const styles = StyleSheet.create({
   checkContainer: {
     padding: '2%',
     marginLeft: '8%',
-    marginRight: '8%',
+    marginRight: '8%'
   },
   imgCheck:{
     width: 35, 
