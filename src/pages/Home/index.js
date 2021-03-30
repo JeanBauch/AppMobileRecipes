@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { Modalize } from 'react-native-modalize'
 
+import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
+import { useDetail } from '../../hooks/DetailContext';
 
 const DATA = [
   {
@@ -23,6 +25,11 @@ const DATA = [
 export default function Home() {
   const navigation = useNavigation();
 
+  const [category, setCategory] = useState([]);
+
+  const { detail, changeDetail } = useDetail();
+  console.log(detail)
+
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
   const onOpenCategory = () => {
@@ -41,8 +48,24 @@ export default function Home() {
   };
 
   const renderItem = ( { item } ) => (
-      <Item title={item.title}/>
+      <Item title={item.name}/>
   );
+
+    useEffect (() => {
+      getCategory();
+    }, []) 
+
+    const getCategory = async () => {
+      const {data} = await api.get("categories.php");
+      const auxCategory = data.categories.map( (category) => {
+        return { 
+          id: category.idCategory,
+          name: category.strCategory
+        }
+      } )
+      setCategory(auxCategory);
+      console.log(auxCategory);
+    }
 
  return (
    <View style={styles.container}>
@@ -133,7 +156,7 @@ export default function Home() {
     >
       <Text>Lista de Categoria</Text>
         <FlatList
-          data={DATA}
+          data={category}
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />
