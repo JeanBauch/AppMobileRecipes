@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     recipeImg:{
-        width: 150,
-        height: 150,
+        width: 140,
+        height: 140,
         borderRadius: 30
     },
     recipeText:{
         fontFamily: 'Montserrat_300Light',
-        fontSize: 15,
+        fontSize: 14,
         marginTop: '3%'
     }
 });

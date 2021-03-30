@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { Modalize } from 'react-native-modalize'
 
@@ -7,28 +7,12 @@ import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'Dessert',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Side',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Chicken',
-  }
-]; 
-
 export default function Home() {
   const navigation = useNavigation();
 
   const [category, setCategory] = useState([]);
 
   const { detail, changeDetail } = useDetail();
-  console.log(detail)
 
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
@@ -57,10 +41,12 @@ export default function Home() {
 
     const getCategory = async () => {
       const {data} = await api.get("categories.php");
+      
       const auxCategory = data.categories.map( (category) => {
         return { 
           id: category.idCategory,
-          name: category.strCategory
+          name: category.strCategory,
+          img: category.strCategoryThumb,
         }
       } )
       setCategory(auxCategory);
@@ -125,10 +111,14 @@ export default function Home() {
 
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+      {/* {recipes.map( (recipe) => ( */}
+      {/*key={recipe.id} */}
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}> 
         <Recipes 
           img={require('../../assets/5.jpg')} 
-          category="Chicken" 
+          // category = {recipe.strCategory} 
+          category = {"Chicken"}
           area = "Japanese" 
           onClick={()=>alert('Clicou')}
         >
@@ -145,23 +135,46 @@ export default function Home() {
         </Recipes>
 
       </View>
+      {/* ) )} */}
 
-
-      
     </ScrollView>
 
     <Modalize
       ref={modalizeRef}
       snapPoint={450}
     >
-      <Text>Lista de Categoria</Text>
-        <FlatList
-          data={category}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      </Modalize>
+    <Text style={styles.titleFilter}>Lista de Categoria</Text>
 
+    {category.map( (c) => (
+      <ScrollView key={c.id}>
+          <TouchableOpacity style = {styles.checkContainer}>
+            <View style={{ flexDirection: 'row'}}>
+
+              <Image 
+                source={{ uri: c.img }}
+                style={styles.imgCheck}
+              />
+
+              <Text style = { styles.textCheck }>
+                {c.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+      </ScrollView>
+    ) )}
+    
+    <TouchableOpacity style={styles.confirmCheck}>
+        <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
+    </TouchableOpacity>
+      {/* <FlatList
+        data={category}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        scrollEnabled={true}
+      /> */}
+    </Modalize>
+    
     <Modalize
       ref={modalizeRefArea}
       snapPoint={450}
@@ -209,5 +222,38 @@ const styles = StyleSheet.create({
   recipesContainer:{
     marginHorizontal: '3%',
     marginVertical: '5%',
+  },
+  titleFilter: {
+    fontFamily: 'Montserrat_500Medium',
+    fontSize: 18,
+    padding: '5%',
+    alignSelf: 'center',
+  },
+  checkContainer: {
+    padding: '2%',
+    marginLeft: '8%',
+    marginRight: '8%',
+  },
+  imgCheck:{
+    width: 35, 
+    height: 30, 
+    marginRight: '8%',
+    alignSelf: "center",
+    borderRadius: 8
+  },
+  textCheck: {
+    fontFamily: 'Montserrat_400Regular',
+    fontSize:15,
+    alignSelf: "center"
+  },
+  confirmCheck: {
+    marginTop: '4%',
+    marginBottom: '4%',
+    width: 250,
+    height: 40,
+    justifyContent: "center",
+    alignSelf: "center",
+    borderRadius: 8,
+    backgroundColor: '#EA1D2C'
   }
 });
