@@ -14,7 +14,7 @@ export default function Home() {
   const [category, setCategory] = useState([]);
   const [area, setArea] = useState([]);
   const { detail, changeDetail } = useDetail();
-  const [checked, setChecked] = useState(false);
+  const [selectCategories, setSelectCategories] = useState([]);
 
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
@@ -143,32 +143,46 @@ export default function Home() {
     <Modalize
       ref={modalizeRef}
       snapPoint={450}
+      onOpen={ () => { setSelectCategories([]) } }
     >
-    <Text style={styles.titleFilter}>Lista de Categoria</Text>
+      <Text style={styles.titleFilter}>Lista de Categoria</Text>
 
-    {category.map( (c) => (
-      <ScrollView key={c.id}>
-          <TouchableOpacity style = {styles.checkContainer}>
-            <View style={{ flexDirection: 'row'}}>
+      {category.map( (c) => (
+        <TouchableOpacity 
+          style = { {...styles.checkContainer, backgroundColor: selectCategories.includes( c.name ) ? '#dcdcdc' : '#FFF' } } 
+          key={c.id} 
+          onPress={ () => { 
+            const isCategorySelected = selectCategories.includes( c.name )
 
-              <Image 
-                source={{ uri: c.img }}
-                style={styles.imgCheck}
-              />
+            if(isCategorySelected) {
+              setSelectCategories( [...selectCategories.filter( (cat) =>  cat != c.name) ] )
+            } else {
+              setSelectCategories( [...selectCategories, c.name] )
+            }
 
-              <Text style = { styles.textCheck }>
-                {c.name}
-              </Text>
+          }}
+        >
+          <View style={{ flexDirection: 'row'}}>
 
-            </View>
-          </TouchableOpacity>
-      </ScrollView>
-    ) )}
-    
-    <TouchableOpacity style={styles.confirmCheck}>
-        <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
-    </TouchableOpacity>
+            <Image 
+              source={{ uri: c.img }}
+              style={styles.imgCheck}
+            />
 
+            <Text style = { styles.textCheck }>
+              {c.name}
+            </Text>
+
+          </View>
+        </TouchableOpacity>
+      ) )}
+      
+      <TouchableOpacity 
+        style={styles.confirmCheck}
+        onPress={ ()=> {alert(selectCategories); console.log(selectCategories) } }
+      >
+          <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
+      </TouchableOpacity>
     </Modalize>
     
     <Modalize
@@ -177,19 +191,19 @@ export default function Home() {
     >
       <Text style={styles.titleFilter}>Lista de Area</Text>
 
-      {area.map( (a) => (
-      <ScrollView key={a.id}>
-        <TouchableOpacity style = {styles.checkContainer}>
-          <View style={{ flexDirection: 'row'}}>
-            <Text style = { styles.textCheck }>
-              {a.name}
-            </Text>
+      
+    {area.map( (a, index) => (
+      <TouchableOpacity style = {styles.checkContainer} key={index}>
+        <View style={{ flexDirection: 'row'}}>
+          <Text style = { styles.textCheck }>
+            {a.name}
+          </Text>
 
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+        </View>
+      </TouchableOpacity>
     ) )}
-    
+      
+
     <TouchableOpacity style={styles.confirmCheck}>
       <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
     </TouchableOpacity>
@@ -246,14 +260,15 @@ const styles = StyleSheet.create({
   checkContainer: {
     padding: '2%',
     marginLeft: '8%',
-    marginRight: '8%'
+    marginRight: '8%',
+    borderRadius: 10,
   },
   imgCheck:{
     width: 35, 
     height: 30, 
     marginRight: '8%',
     alignSelf: "center",
-    borderRadius: 8
+    borderRadius: 6
   },
   textCheck: {
     fontFamily: 'Montserrat_400Regular',
