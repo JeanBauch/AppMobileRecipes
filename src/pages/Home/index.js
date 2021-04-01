@@ -1,12 +1,40 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-
 import { useNavigation } from '@react-navigation/native';
 import { Modalize } from 'react-native-modalize';
 
 import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
+
+const sigla = {
+  'American': 'us',
+  'British': 'gb',
+  'Canadian': 'ca',
+  'Chinese': 'cn',
+  'Dutch': 'nl',
+  'Egyptian': 'eg',
+  'French': 'fr',
+  'Greek': 'gr',
+  'Indian': 'in',
+  'Irish': 'ie',
+  'Italian': 'it',
+  'Jamaican': 'jm',
+  'Japanese': 'jp',
+  'Kenyan': 'kn',
+  'Malaysian': 'my',
+  'Mexican': 'mx',
+  'Moroccan': 'ma',
+  'Polish': 'pl',
+  'Portuguese': 'pt',
+  'Russian': 'ru',
+  'Spanish': 'es',
+  'Thai': 'th',
+  'Tunisian': 'tn',
+  'Turkish': 'tr',
+  'Vietnamese': 'vn',
+
+}
 
 export default function Home() {
   const navigation = useNavigation();
@@ -47,12 +75,54 @@ export default function Home() {
     const { data } = await api.get("list.php?a=list");
 
     const auxArea = data.meals.map( (area) => {
+      let imgUrl = changeSigla(area.strArea)
       return {
         name: area.strArea,
+        img: imgUrl
       }
     } )
     setArea(auxArea);
+    console.log(auxArea);
   }
+
+  const renderItemCategory = ( { item } ) => (
+    <TouchableOpacity 
+      style={{...styles.checkContainer, backgroundColor: selectCategories.includes( item.name ) ? '#dcdcdc' : '#FFF'}}
+      onPress= { () => {
+        const isCategorySelected = selectCategories.includes( item.name );
+        if(isCategorySelected) {
+          setSelectCategories( [...selectCategories.filter( (cat) =>  cat != item.name) ] )
+        } else {
+          setSelectCategories( [...selectCategories, item.name] )
+        }
+
+      }}
+    >
+      <View style = {{ flexDirection: 'row' }}>
+        <Image
+          source= {{uri: item.img}}
+          style={styles.imgCheck}
+        />
+
+        <Text style= {styles.textCheck}>
+          {item.name}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  )
+
+  const buttonConfirmSelect =  () => (
+    <TouchableOpacity 
+      style={styles.confirmCheck}
+      onPress={ ()=> {alert(selectCategories); console.log(selectCategories) } }
+    >
+      <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
+    </TouchableOpacity>
+  )
+
+  const changeSigla = (name) => {
+    return(`https://www.countryflags.io/${sigla[name]}/shiny/64.png`);
+  } 
 
  return (
    <View style={styles.container}>
@@ -143,72 +213,32 @@ export default function Home() {
     <Modalize
       ref={modalizeRef}
       snapPoint={450}
+      handlePosition={"inside"}
+      HeaderComponent= {<Text style={styles.titleFilter}>Lista de Categoria</Text>}
+      FooterComponent= {buttonConfirmSelect}
+      flatListProps={{
+        data: category,
+        renderItem: renderItemCategory,
+        keyExtractor: item => item.id,
+        showsVerticalScrollIndicator: false,
+      }}
       onOpen={ () => { setSelectCategories([]) } }
-    >
-      <Text style={styles.titleFilter}>Lista de Categoria</Text>
-
-      {category.map( (c) => (
-        <TouchableOpacity 
-          style = { {...styles.checkContainer, backgroundColor: selectCategories.includes( c.name ) ? '#dcdcdc' : '#FFF' } } 
-          key={c.id} 
-          onPress={ () => { 
-            const isCategorySelected = selectCategories.includes( c.name )
-
-            if(isCategorySelected) {
-              setSelectCategories( [...selectCategories.filter( (cat) =>  cat != c.name) ] )
-            } else {
-              setSelectCategories( [...selectCategories, c.name] )
-            }
-
-          }}
-        >
-          <View style={{ flexDirection: 'row'}}>
-
-            <Image 
-              source={{ uri: c.img }}
-              style={styles.imgCheck}
-            />
-
-            <Text style = { styles.textCheck }>
-              {c.name}
-            </Text>
-
-          </View>
-        </TouchableOpacity>
-      ) )}
-      
-      <TouchableOpacity 
-        style={styles.confirmCheck}
-        onPress={ ()=> {alert(selectCategories); console.log(selectCategories) } }
-      >
-          <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
-      </TouchableOpacity>
-    </Modalize>
+    />
     
     <Modalize
       ref={modalizeRefArea}
       snapPoint={450}
-    >
-      <Text style={styles.titleFilter}>Lista de Area</Text>
-
-      
-    {area.map( (a, index) => (
-      <TouchableOpacity style = {styles.checkContainer} key={index}>
-        <View style={{ flexDirection: 'row'}}>
-          <Text style = { styles.textCheck }>
-            {a.name}
-          </Text>
-
-        </View>
-      </TouchableOpacity>
-    ) )}
-      
-
-    <TouchableOpacity style={styles.confirmCheck}>
-      <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
-    </TouchableOpacity>
-
-    </Modalize>
+      handlePosition={"inside"}
+      HeaderComponent= {<Text style={styles.titleFilter}>Lista de Area</Text>}
+      FooterComponent= {buttonConfirmSelect}
+      flatListProps={{
+        data: area,
+        renderItem: renderItemCategory,
+        keyExtractor: item => item.name,
+        showsVerticalScrollIndicator: false,
+      }}
+      onOpen={ () => { setSelectCategories([]) } }
+    />
 
   </View>
   );
@@ -256,6 +286,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: '5%',
     alignSelf: 'center',
+    marginTop:'2%'
   },
   checkContainer: {
     padding: '2%',
