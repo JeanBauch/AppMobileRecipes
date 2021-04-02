@@ -8,17 +8,17 @@ export default function Recipes(props) {
         return desc;
     }
 
-    return `${desc.substring(0, 18)}...`;
+    return `${desc.substring(0, 12)}...`;
  }
 
  return (
    <TouchableOpacity style={styles.container} onPress={props.onClick}>
       <Image
-        source={props.img}
+        source={ {uri: props.img} }
         style={styles.recipeImg}
       />
       <Text style={styles.recipeText}>
-          {filterDesc(props.children)}
+          {filterDesc(props.name)}
       </Text>
       <View opacity={0.4}>
         <Text style={styles.recipeText}> {props.category} </Text>
@@ -29,18 +29,18 @@ export default function Recipes(props) {
 
 const styles = StyleSheet.create({
     container:{
-        paddingVertical: '2%',
-        alignItems: 'center',
-        justifyContent: 'center'
+      paddingVertical: '2%',
+      //paddingHorizontal: '5%',
+      alignItems: 'center',  
     },
     recipeImg:{
-        width: 140,
-        height: 140,
-        borderRadius: 30
+      width: 130,
+      height: 130,
+      borderRadius: 30
     },
     recipeText:{
-        fontFamily: 'Montserrat_300Light',
-        fontSize: 14,
-        marginTop: '3%'
+      fontFamily: 'Montserrat_300Light',
+      fontSize: 14,
+      marginTop: '3%'
     }
 });

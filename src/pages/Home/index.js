@@ -41,8 +41,9 @@ export default function Home() {
 
   const [category, setCategory] = useState([]);
   const [area, setArea] = useState([]);
-  const { detail, changeDetail } = useDetail();
+  const { detail, getDestaques, loaded } = useDetail();
   const [selectCategories, setSelectCategories] = useState([]);
+  const [propsRecipe, setpropsRecipe] = useState([]);
 
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
@@ -56,7 +57,16 @@ export default function Home() {
   useEffect (() => {
     getCategory();
     getArea();
+    getDestaques();
   }, []) 
+
+  useEffect (() => {
+    if(!loaded)
+      return 
+
+    getProps();
+
+  }, [loaded])
 
   const getCategory = async () => {
     const {data} = await api.get("categories.php");
@@ -82,7 +92,6 @@ export default function Home() {
       }
     } )
     setArea(auxArea);
-    console.log(auxArea);
   }
 
   const renderItemCategory = ( { item } ) => (
@@ -124,16 +133,33 @@ export default function Home() {
     return(`https://www.countryflags.io/${sigla[name]}/shiny/64.png`);
   } 
 
+  const getProps = () => {
+    if(detail.length === 0)
+      return
+    
+    const parts = detail.map( (d) => {
+      return {
+        id: d.meals[0].idMeal,
+        name: d.meals[0].strMeal,
+        category: d.meals[0].strCategory,
+        area: d.meals[0].strArea,
+        img: d.meals[0].strMealThumb,
+      }  
+    } )
+    setpropsRecipe(parts);
+    console.log(parts);
+  }
+
  return (
    <View style={styles.container}>
     <View style={styles.header}>
       <View style={styles.filterContainer}> 
 
-        <TouchableOpacity style={[styles.filterBtn, { marginLeft: 40 }]} onPress={onOpenCategory}>
+        <TouchableOpacity style={[styles.filterBtn, { marginLeft: 30 }]} onPress={onOpenCategory}>
           <Text style={styles.text}>Category</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.filterBtn, { marginRight: 40 }]} onPress={onOpenArea}>
+        <TouchableOpacity style={[styles.filterBtn, { marginRight: 30 }]} onPress={onOpenArea}>
           <Text style={styles.text}>Area</Text>
         </TouchableOpacity>
       </View>
@@ -142,8 +168,23 @@ export default function Home() {
     <View style={styles.line} />
 
     <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+    
+    <View style={styles.scrollContainer}>
+      {
+        propsRecipe.map( (pr) => (
+            <Recipes
+              name={pr.name}
+              img={pr.img}
+              category={pr.category}
+              area={pr.area}
+              onClick={ () => navigation.navigate('Detail') }
+              key={pr.id}
+            />
+        ))
+      }
+    </View>
+      
+      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Recipes 
           img={require('../../assets/1.jpg')} 
           category="Dessert" area = "American" 
@@ -182,9 +223,6 @@ export default function Home() {
 
       </View>
 
-      {/* {recipes.map( (recipe) => ( */}
-      {/*key={recipe.id} */}
-
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}> 
         <Recipes 
           img={require('../../assets/5.jpg')} 
@@ -205,8 +243,7 @@ export default function Home() {
           Itterballen (Dutch meatballs)
         </Recipes>
 
-      </View>
-      {/* ) )} */}
+      </View> */}
 
     </ScrollView>
 
@@ -253,6 +290,11 @@ const styles = StyleSheet.create({
   header:{
     marginBottom: 5
   },
+  scrollContainer:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around'
+  },
   filterContainer:{
     flexDirection: 'row',
     marginVertical: '3%',
@@ -260,7 +302,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   filterBtn:{
-    width: 130,
+    width: 120,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -278,6 +320,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   recipesContainer:{
+    flex: 1,
     marginHorizontal: '3%',
     marginVertical: '5%',
   },
