@@ -81,7 +81,7 @@ export default function Ingredients() {
 
 const styles = StyleSheet.create({
     container:{
-        borderColor: '#808080',
+        borderColor: '#C0C0C0',
         borderWidth: 1,
         borderRadius: 15,
         marginBottom: '4%'

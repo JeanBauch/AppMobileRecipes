@@ -147,7 +147,7 @@ export default function Home() {
       }  
     } )
     setpropsRecipe(parts);
-    console.log(parts);
+    //console.log(parts);
   }
 
  return (
@@ -169,81 +169,20 @@ export default function Home() {
 
     <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
     
-    <View style={styles.scrollContainer}>
-      {
-        propsRecipe.map( (pr) => (
-            <Recipes
-              name={pr.name}
-              img={pr.img}
-              category={pr.category}
-              area={pr.area}
-              onClick={ () => navigation.navigate('Detail') }
-              key={pr.id}
-            />
-        ))
-      }
-    </View>
-      
-      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Recipes 
-          img={require('../../assets/1.jpg')} 
-          category="Dessert" area = "American" 
-          onClick={ ()=> navigation.navigate('Detail') }
-        >
-          Penaut Butter Cheesecake
-        </Recipes>
-
-        <Recipes 
-          img={require('../../assets/2.jpg')} 
-          category="Dessert" 
-          area = "British" 
-          onClick={()=>alert('Clicou')}
-        >
-          Christmas cake
-        </Recipes>
-
+      <View style={styles.scrollContainer}>
+        {
+          propsRecipe.map( (pr) => (
+              <Recipes
+                name={pr.name}
+                img={pr.img}
+                category={pr.category}
+                area={pr.area}
+                onClick={ () => navigation.navigate('Detail', {id: pr.id, name: pr.name, img: pr.img, cat: pr.category, area: pr.area}) }
+                key={pr.id}
+              />
+          ))
+        }
       </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-        <Recipes 
-          img={require('../../assets/3.jpg')} 
-          category="Dessert" 
-          area = "Canadian" onClick={()=>alert('Clicou')} >
-          Canadian Butter Tarts
-        </Recipes>
-
-        <Recipes 
-          img={require('../../assets/4.jpg')} 
-          category="Side" 
-          area = "French" 
-          onClick={()=>alert('Clicou')}
-        >
-          Brioche
-        </Recipes>
-
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}> 
-        <Recipes 
-          img={require('../../assets/5.jpg')} 
-          // category = {recipe.strCategory} 
-          category = {"Chicken"}
-          area = "Japanese" 
-          onClick={()=>alert('Clicou')}
-        >
-          Chicken Karaage
-        </Recipes>
-
-        <Recipes 
-          img={require('../../assets/6.jpg')} 
-          category="Beef" 
-          area = "Dutch" 
-          onClick={()=>alert('Clicou')}
-        >
-          Itterballen (Dutch meatballs)
-        </Recipes>
-
-      </View> */}
 
     </ScrollView>
 
@@ -322,7 +261,7 @@ const styles = StyleSheet.create({
   recipesContainer:{
     flex: 1,
     marginHorizontal: '3%',
-    marginVertical: '5%',
+    marginVertical: '5%'
   },
   titleFilter: {
     fontFamily: 'Montserrat_500Medium',
