@@ -9,18 +9,37 @@ import Instructions from '../../component/Instructions';
 export default function Detail( { route } ) {
 
     const [moreDetail, setMoreDetail] = useState({});
+    const [IngredientsList, setIngredientsList] = useState([]);
+    const [InstructionsString, setInstructionsString] = useState("");
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         getMoreDetail();
     }, []);
+
+    useEffect(() => {
+        if(!loaded)
+            return 
+        getInstructionsString();
+        getIngredientList();
+    }, [loaded]);
 
     const getMoreDetail = async () => {
         const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.id}`);
 
         Promise.all(data).then( () => {
             setMoreDetail(data);
+            setLoaded(true);
         })
         //console.log(data.meals[0].strMeal);
+    }
+
+    const getIngredientList = () => {
+
+    }
+
+    const getInstructionsString = () => {
+        setInstructionsString(moreDetail.meals[0].strInstructions);
     }
 
     return (
@@ -43,7 +62,9 @@ export default function Detail( { route } ) {
             </View>
 
             <Ingredients/>
-            <Instructions/>
+            <Instructions 
+                instructions={InstructionsString}
+            />
 
         </ScrollView>
     );
