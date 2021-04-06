@@ -1,77 +1,32 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function Ingredients() {
- return (
+export default function Ingredients( props ) {
+console.log(props.ingredientList);
+console.log(props.measureList);
+return (
    <View style={styles.container}>
        <Text style={styles.title}>Ingredients</Text>
 
-
         <View style={styles.ingredientsContainer}>
             <View>
-                <Text style={styles.text}>
-                    50g
-                </Text>
-                <Text style={styles.text}>
-                    175g
-                </Text>
-                <Text style={styles.text}>
-                    5
-                </Text>
-                <Text style={styles.text}>
-                    500g
-                </Text>
-                <Text style={styles.text}>
-                    175g
-                </Text>
-                <Text style={styles.text}>
-                    175g
-                </Text>
-                <Text style={styles.text}>
-                    150ml
-                </Text>
-                <Text style={styles.text}>
-                    275ml
-                </Text>
-                <Text style={styles.text}>
-                    2 tblsp
-                </Text>
-                <Text style={styles.text}>
-                    Crushed
-                </Text>
+                {
+                    props.measureList.map( (measure, index) => (
+                        <Text style={styles.text} key={index}>
+                            {measure}
+                        </Text>
+                    ))
+                }
             </View>
 
             <View>
-                <Text style={styles.text}>
-                    Butter
-                </Text>
-                <Text style={styles.text}>
-                    Peanut Cookies
-                </Text>
-                <Text style={styles.text}>
-                    Gelatine Leafs
-                </Text>
-                <Text style={styles.text}>
-                    Ricotta
-                </Text>
-                <Text style={styles.text}>
-                    Peanut Butter
-                </Text>
-                <Text style={styles.text}>
-                    Golden Syrup
-                </Text>
-                <Text style={styles.text}>
-                    Milk
-                </Text>
-                <Text style={styles.text}>
-                    Double Cream
-                </Text>
-                <Text style={styles.text}>
-                    Light Brown Soft Sugar
-                </Text>
-                <Text style={styles.text}>
-                    Peanut Brittle
-                </Text>
+                {
+                    props.ingredientList.map( (ingredient, index) => (
+                        <Text style={styles.text} key={index}>
+                            {ingredient}
+                        </Text>
+                    ))
+                }
             </View>
         </View>
 
@@ -84,7 +39,8 @@ const styles = StyleSheet.create({
         borderColor: '#C0C0C0',
         borderWidth: 1,
         borderRadius: 15,
-        marginBottom: '4%'
+        marginBottom: '4%',
+        flex: 1
     },
     title: {
         fontFamily: 'Montserrat_500Medium',
@@ -94,11 +50,10 @@ const styles = StyleSheet.create({
     },
     ingredientsContainer:{
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
         paddingBottom: '5%'
     },
     text:{
         fontFamily: 'Montserrat_400Regular',
-        paddingLeft: 50,
     }
 });

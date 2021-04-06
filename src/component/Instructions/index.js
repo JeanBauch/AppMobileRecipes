@@ -4,7 +4,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 export default function Instructions(props) {
  
     function spacing(text){
-        return text;
+        const textFormated = text.split(". ").join(". \n\n\n") ;
+        console.log(textFormated);
+        return textFormated;
     }
  
     return (

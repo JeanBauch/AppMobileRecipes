@@ -9,8 +9,9 @@ import Instructions from '../../component/Instructions';
 export default function Detail( { route } ) {
 
     const [moreDetail, setMoreDetail] = useState({});
-    const [IngredientsList, setIngredientsList] = useState([]);
-    const [InstructionsString, setInstructionsString] = useState("");
+    const [ingredientsList, setIngredientsList] = useState([]);
+    const [measureList, setMeasureList] = useState([]);
+    const [instructionsString, setInstructionsString] = useState("");
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -20,25 +21,40 @@ export default function Detail( { route } ) {
     useEffect(() => {
         if(!loaded)
             return 
-        getInstructionsString();
+        getinstructionsString();
         getIngredientList();
     }, [loaded]);
 
     const getMoreDetail = async () => {
         const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.id}`);
-
-        Promise.all(data).then( () => {
-            setMoreDetail(data);
-            setLoaded(true);
-        })
+        setMoreDetail(data);
+        setLoaded(true);
         //console.log(data.meals[0].strMeal);
     }
 
     const getIngredientList = () => {
+        const measures = [];
+        const ingredients = [];
 
+        for(let i=1; i<21; i++) {
+            const ingredientAux = `strIngredient${i}`;
+            const ingredient = moreDetail.meals[0][ingredientAux];
+            if (!ingredient)
+                continue;
+            
+            const measureAux = `strMeasure${i}`;
+            const measure = moreDetail.meals[0][measureAux];
+            if (!measure)
+                continue;
+            
+            measures.push(measure);
+            ingredients.push(ingredient);
+        }
+        setIngredientsList(ingredients);
+        setMeasureList(measures);
     }
 
-    const getInstructionsString = () => {
+    const getinstructionsString = () => {
         setInstructionsString(moreDetail.meals[0].strInstructions);
     }
 
@@ -61,9 +77,15 @@ export default function Detail( { route } ) {
                 </View>
             </View>
 
-            <Ingredients/>
+            {loaded ? (
+                <Ingredients
+                    ingredientList={ingredientsList}
+                    measureList={measureList}
+                />
+            ) : null }
+            
             <Instructions 
-                instructions={InstructionsString}
+                instructions={instructionsString}
             />
 
         </ScrollView>
