@@ -12,3 +12,7 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 -> De "yarn" para instalacao das dependencias
 ---> yarn
 
+-> Execute o comando de execucao
+---> expo start
+
+
