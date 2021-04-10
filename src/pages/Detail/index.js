@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         width: '100%',
-        backgroundColor: '#FFF'
+        backgroundColor: '#ededed'
     },
     image:{
         width: '100%',
@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
         borderRightWidth: 1,
         borderBottomStartRadius: 15,
         borderBottomEndRadius: 15,
-        marginBottom: '4%'
+        marginBottom: '4%',
+        backgroundColor: '#fff'
     },
     title:{
         fontFamily: 'Montserrat_500Medium',

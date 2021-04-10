@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         marginBottom: '4%',
-        flex: 1
+        flex: 1,
+        backgroundColor: '#fff'
     },
     title: {
         fontFamily: 'Montserrat_500Medium',

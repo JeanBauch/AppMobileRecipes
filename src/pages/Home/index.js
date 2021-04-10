@@ -44,12 +44,21 @@ export default function Home() {
   const { detail, getDestaques, loaded } = useDetail();
   const [selectCategories, setSelectCategories] = useState([]);
   const [propsRecipe, setpropsRecipe] = useState([]);
+  const [pressSelectFilter, setPressSelectFilter] = useState(false);
+  const [prosRecipeSelected, setProsRecipeSelected] = useState([]);
+  const [reload, setReload] = useState(false);
 
   const modalizeRef = useRef(null);
   const modalizeRefArea = useRef(null);
+
   const onOpenCategory = () => {
     modalizeRef.current?.open();
   };
+
+  const onCloseCategory = () => {
+    modalizeRef.current?.close();
+  };
+
   const onOpenArea = () => {
     modalizeRefArea.current?.open();
   };
@@ -65,8 +74,13 @@ export default function Home() {
       return 
 
     getProps();
-
   }, [loaded])
+
+  useEffect (() => {
+    if(!pressSelectFilter)
+      return
+    getSelectFilter();
+  }, [pressSelectFilter, reload]) 
 
   const getCategory = async () => {
     const {data} = await api.get("categories.php");
@@ -92,6 +106,31 @@ export default function Home() {
       }
     } )
     setArea(auxArea);
+  }
+
+  const getSelectFilter = async () => {
+    const filterIDAux = [];
+
+    const response = selectCategories.map( async (selectFilter)  => {
+        const { data } = await api.get(`filter.php?c=${selectFilter}`); 
+        filterIDAux.push( data.meals );
+    })
+    Promise.all(response).then( () => {
+      const filterDetailAux = [];
+      
+      const responseObj = filterIDAux.map( async (selected)  => {
+        const responseD = selected.map( async (d) => {
+          const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${d.idMeal}`);
+          filterDetailAux.push( data.meals[0] );
+        } )
+        return Promise.all(responseD);
+      })
+      Promise.all(responseObj).then( () => {
+        setProsRecipeSelected(filterDetailAux);
+      //   console.log("Ficou verdadeiro!!!")
+      //   setReload(true);
+      } )
+    } )
   }
 
   const renderItemCategory = ( { item } ) => (
@@ -123,7 +162,7 @@ export default function Home() {
   const buttonConfirmSelect =  () => (
     <TouchableOpacity 
       style={styles.confirmCheck}
-      onPress={ ()=> {alert(selectCategories); console.log(selectCategories) } }
+      onPress={ ()=> {setPressSelectFilter(true); console.log(selectCategories); setReload(true) } }
     >
       <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
     </TouchableOpacity>
@@ -167,7 +206,9 @@ export default function Home() {
 
     <View style={styles.line} />
 
-    <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
+
+    {!reload ? (
+      <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
     
       <View style={styles.scrollContainer}>
         {
@@ -185,6 +226,27 @@ export default function Home() {
       </View>
 
     </ScrollView>
+    ) : (
+      <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
+    
+      <View style={styles.scrollContainer}>
+        {
+          prosRecipeSelected.map( (pr, index) => (
+            <Recipes
+            name={pr.strMeal}
+            img={pr.strMealThumb}
+            category={pr.strCategory}
+            area={pr.strArea}
+            onClick={ () => navigation.navigate('Detail', {id: pr.idMeal, name: pr.strMeal, img: pr.strMealThumb, cat: pr.strCategory, area: pr.strArea}) }
+            key={pr.idMeal}
+          />
+          ))
+        }
+      </View>
+
+    </ScrollView>
+    )  }
+    
 
     <Modalize
       ref={modalizeRef}
@@ -198,7 +260,7 @@ export default function Home() {
         keyExtractor: item => item.id,
         showsVerticalScrollIndicator: false,
       }}
-      onOpen={ () => { setSelectCategories([]) } }
+      onOpen={ () => { setSelectCategories([]); setReload(false) } }
     />
     
     <Modalize
