@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Modalize } from 'react-native-modalize';
-
+ 
 import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
@@ -47,21 +47,24 @@ export default function Home() {
   const [pressSelectFilter, setPressSelectFilter] = useState(false);
   const [prosRecipeSelected, setProsRecipeSelected] = useState([]);
   const [reload, setReload] = useState(false);
+  const [siglaFilterName, setSiglaFilterName] = useState("");
 
-  const modalizeRef = useRef(null);
+  const modalizeRefCategory = useRef(null);
   const modalizeRefArea = useRef(null);
 
   const onOpenCategory = () => {
-    modalizeRef.current?.open();
+    modalizeRefCategory.current?.open();
   };
 
-  const onCloseCategory = () => {
-    modalizeRef.current?.close();
+  const onCloseModal = () => {
+    modalizeRefCategory.current?.close();
+    modalizeRefArea.current?.close();
   };
 
   const onOpenArea = () => {
     modalizeRefArea.current?.open();
   };
+  
 
   useEffect (() => {
     getCategory();
@@ -112,23 +115,21 @@ export default function Home() {
     const filterIDAux = [];
 
     const response = selectCategories.map( async (selectFilter)  => {
-        const { data } = await api.get(`filter.php?c=${selectFilter}`); 
-        filterIDAux.push( data.meals );
+        const { data } = await api.get(`filter.php?${siglaFilterName}=${selectFilter}`); 
+        filterIDAux.push( data.meals ); 
     })
     Promise.all(response).then( () => {
       const filterDetailAux = [];
       
       const responseObj = filterIDAux.map( async (selected)  => {
-        const responseD = selected.map( async (d) => {
-          const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${d.idMeal}`);
+      const responseD = selected.map( async (d) => {
+        const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${d.idMeal}`);
           filterDetailAux.push( data.meals[0] );
         } )
         return Promise.all(responseD);
       })
       Promise.all(responseObj).then( () => {
         setProsRecipeSelected(filterDetailAux);
-      //   console.log("Ficou verdadeiro!!!")
-      //   setReload(true);
       } )
     } )
   }
@@ -162,7 +163,11 @@ export default function Home() {
   const buttonConfirmSelect =  () => (
     <TouchableOpacity 
       style={styles.confirmCheck}
-      onPress={ ()=> {setPressSelectFilter(true); console.log(selectCategories); setReload(true) } }
+      onPress={ ()=> {
+        setPressSelectFilter(true); 
+        setReload(true);  
+        onCloseModal('default');
+      } }
     >
       <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
     </TouchableOpacity>
@@ -249,7 +254,7 @@ export default function Home() {
     
 
     <Modalize
-      ref={modalizeRef}
+      ref={modalizeRefCategory}
       snapPoint={450}
       handlePosition={"inside"}
       HeaderComponent= {<Text style={styles.titleFilter}>Lista de Categoria</Text>}
@@ -260,7 +265,7 @@ export default function Home() {
         keyExtractor: item => item.id,
         showsVerticalScrollIndicator: false,
       }}
-      onOpen={ () => { setSelectCategories([]); setReload(false) } }
+      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("c") } }
     />
     
     <Modalize
@@ -275,7 +280,7 @@ export default function Home() {
         keyExtractor: item => item.name,
         showsVerticalScrollIndicator: false,
       }}
-      onOpen={ () => { setSelectCategories([]) } }
+      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("a") } }
     />
 
   </View>

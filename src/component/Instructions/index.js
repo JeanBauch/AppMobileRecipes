@@ -5,7 +5,6 @@ export default function Instructions(props) {
  
     function spacing(text){
         const textFormated = text.split(". ").join(". \n\n\n") ;
-        console.log(textFormated);
         return textFormated;
     }
  

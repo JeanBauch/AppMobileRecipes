@@ -29,7 +29,6 @@ export default function Detail( { route } ) {
         const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.id}`);
         setMoreDetail(data);
         setLoaded(true);
-        //console.log(data.meals[0].strMeal);
     }
 
     const getIngredientList = () => {

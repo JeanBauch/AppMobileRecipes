@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default function Ingredients( props ) {
-console.log(props.ingredientList);
-console.log(props.measureList);
 return (
    <View style={styles.container}>
        <Text style={styles.title}>Ingredients</Text>
