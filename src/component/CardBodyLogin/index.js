@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar} from 'react-native';
 import color from '../../styles/color';
 import ButtonConfirmLogin from '../ButtonConfirmLogin';
 import ButtonLogin from '../ButtonLogin';
@@ -9,43 +9,109 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function CardBodyLogin() {
+  const [selectedScreen, setSelectedScreen] = useState('Login');
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+  const [email, setEmail] = useState('');
+
+  function handleSelectedScreen(screen) {
+    setSelectedScreen(screen);
+    console.log(screen);
+  }
+
+  function handleInputBlur(){
+    setIsFocused(false);
+    setIsFilled(!!email);
+  }
+
+  function handleInputFocus(){
+    setIsFocused(true);
+  }
+
+  function handleInputChange(email){
+    setIsFilled(!!email);
+    setEmail(email);
+  }
+
   return(
     <View style={styles.container}>
+      <StatusBar
+        backgroundColor={'transparent'}
+        barStyle={'dark-content'}
+      />
       <View style={styles.content}>
         <View style={styles.selectLoginSignUp}>
           <ButtonLogin 
             title={'Login'} 
-            selected={true}
+            selected={selectedScreen === 'Login'}
+            onPress={() => handleSelectedScreen('Login')}
           />
           <ButtonLogin 
             title={'Sign Up'} 
-            selected={false}
+            selected={selectedScreen === 'SignUp'}
+            onPress={() => handleSelectedScreen('SignUp')}
           />
         </View>
 
-        <View>
-          <TextInput 
-            style={[
-              styles.input
-            ]}
-            placeholder="Email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
-          <TextInput 
-            style={[
-              styles.input
-            ]}
-            placeholder="Senha"
-            textContentType="password"
-            keyboardType="visible-password"
-          />
-          <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-            <Text style={styles.textInput}>
-              Esqueceu sua senha?
-            </Text>
-          </TouchableOpacity>
-        </View>
+        
+        {selectedScreen === 'Login' ? 
+          <View style={{marginTop: 50}}>
+            
+            <TextInput 
+              style={[
+                styles.input,
+                (isFocused || isFilled) && { borderColor: color.orangeDark2 }
+              ]}
+              placeholder="Email"
+              
+              onBlur={handleInputBlur}
+              onFocus={handleInputFocus}
+              onChangeText={handleInputChange}
+            />
+            <TextInput 
+              style={[
+                styles.input
+              ]}
+              placeholder="Senha"
+              textContentType="password"
+              keyboardType="visible-password"
+            />
+            <TouchableOpacity style={{alignSelf: 'flex-end'}}>
+              <Text style={styles.textInput}>
+                Esqueceu sua senha?
+              </Text>
+            </TouchableOpacity>
+          </View>
+        :(
+          <View style={{marginTop: 25}}>
+            <TextInput 
+              style={[
+                styles.input
+              ]}
+              placeholder="Email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+            />
+            <TextInput 
+              style={[
+                styles.input
+              ]}
+              placeholder="Senha"
+              textContentType="password"
+              keyboardType="visible-password"
+            />
+            <TextInput 
+              style={[
+                styles.input,
+                {marginBottom: 5}
+              ]}
+              placeholder="Confirmar Senha"
+              textContentType="password"
+              keyboardType="visible-password"
+            />
+          </View>
+         )}
+         
 
         <View style={styles.containerSpaceBetween}>
           <ButtonConfirmLogin
@@ -60,7 +126,7 @@ export default function CardBodyLogin() {
           </Text>
 
           <View style={{flexDirection: 'row', marginTop: 25}}>
-            
+
             <TouchableOpacity style={{paddingHorizontal: 5}}>
               <AntDesign name="facebook-square" size={34}/> 
             </TouchableOpacity>
@@ -106,7 +172,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 225,
     marginTop: 50,
-    marginBottom: 50,
 
     borderWidth: 1,
     borderRadius: 14,
@@ -117,7 +182,8 @@ const styles = StyleSheet.create({
     borderColor: color.lineStyle,
     color: color.orangeDark3,
     width: '100%',
-    fontSize: 18,
+    fontSize: 12,
+    fontFamily: 'Montserrat_300Light',
     marginBottom: 20,
   },
   textInput: {
@@ -127,6 +193,6 @@ const styles = StyleSheet.create({
   containerSpaceBetween: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 25,
+    marginTop: 30,
   }
 });
