@@ -299,7 +299,8 @@ const styles = StyleSheet.create({
   scrollContainer:{
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingBottom: '10%',
   },
   filterContainer:{
     flexDirection: 'row',
@@ -328,7 +329,8 @@ const styles = StyleSheet.create({
   recipesContainer:{
     flex: 1,
     marginHorizontal: '3%',
-    marginVertical: '5%'
+    //marginVertical: '5%'
+    paddingTop: '10%'
   },
   titleFilter: {
     fontFamily: 'Montserrat_500Medium',

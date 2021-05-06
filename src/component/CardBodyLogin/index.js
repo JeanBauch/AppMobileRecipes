@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar} from 'react-native';
 import color from '../../styles/color';
 import ButtonConfirmLogin from '../ButtonConfirmLogin';
 import ButtonLogin from '../ButtonLogin';
 import { AntDesign } from '@expo/vector-icons';
+import { authDatabase, provider } from './../../config/firebase';
+import { useNavigation } from '@react-navigation/core';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function CardBodyLogin() {
+  const navigation = useNavigation();
+
   const [selectedScreen, setSelectedScreen] = useState('Login');
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isEmailCorrect, setIsEmailCorrect] = useState(true);
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
 
   function handleSelectedScreen(screen) {
     setSelectedScreen(screen);
-    console.log(screen);
   }
 
   function handleInputBlur(){
@@ -31,6 +38,85 @@ export default function CardBodyLogin() {
   function handleInputChange(email){
     setIsFilled(!!email);
     setEmail(email);
+  }
+
+  function handleInputPasswordChange(password){
+    setPassword(password);
+  }
+
+  function handleInputConfirmPasswordChange(confirmPassword){
+    setConfirmPassword(confirmPassword);
+  }
+
+  function handleCreateUserSubmit(screen){
+
+    // console.log(email);
+    // console.log(password);
+
+    if(password === confirmPassword) {
+      setIsPasswordCorrect(true);
+    } else {
+      setIsPasswordCorrect(false);
+    }
+
+    if(screen === "Login") {
+      authDatabase.signInWithEmailAndPassword(email, password)
+        .then((userCrential) => {
+          var user = userCrential.user;
+          console.log("Logado com sucesso!");
+          setEmail('');
+          setPassword('');
+          navigation.navigate("Home");
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode);
+          console.log("-->");
+          console.log(errorMessage);
+        })
+
+
+    } else if (screen === "SignUp") {
+      authDatabase.createUserWithEmailAndPassword(email, password)
+      .then((userCrential) => {
+        var user = userCrential.user;
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log("-->");
+        console.log(errorMessage);
+      });
+    }
+  }
+
+  function handleGoogleLogin(){
+    console.log("Google!");
+    authDatabase.signInWithRedirect(provider);
+
+    authDatabase.getRedirectResult()
+      .then((result) => {
+        if(result.credential) {
+          var credential = result.credential;
+          var token = credential.accessToken;
+
+          console.log(credential);
+          console.log(token);
+        }
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+
+        console.log(errorCode);
+        console.log(errorMessage);
+        console.log(email);
+        console.log(credential);
+      });
   }
 
   return(
@@ -75,6 +161,7 @@ export default function CardBodyLogin() {
               placeholder="Senha"
               textContentType="password"
               keyboardType="visible-password"
+              onChangeText={handleInputPasswordChange}
             />
             <TouchableOpacity style={{alignSelf: 'flex-end'}}>
               <Text style={styles.textInput}>
@@ -86,28 +173,38 @@ export default function CardBodyLogin() {
           <View style={{marginTop: 25}}>
             <TextInput 
               style={[
-                styles.input
+                styles.input,
+                (isFocused || isFilled) && { borderColor: color.orangeDark2 },
+                !isEmailCorrect && { borderColor: color.red }
               ]}
               placeholder="Email"
               textContentType="emailAddress"
               keyboardType="email-address"
-            />
-            <TextInput 
-              style={[
-                styles.input
-              ]}
-              placeholder="Senha"
-              textContentType="password"
-              keyboardType="visible-password"
+
+              onBlur={handleInputBlur}
+              onFocus={handleInputFocus}
+              onChangeText={handleInputChange}
             />
             <TextInput 
               style={[
                 styles.input,
-                {marginBottom: 5}
+                !isPasswordCorrect && { borderColor: color.red }
+              ]}
+              placeholder="Senha"
+              textContentType="password"
+              keyboardType="visible-password"
+              onChangeText={handleInputPasswordChange}
+            />
+            <TextInput 
+              style={[
+                styles.input,
+                {marginBottom: 5},
+                !isPasswordCorrect && { borderColor: color.red }
               ]}
               placeholder="Confirmar Senha"
               textContentType="password"
               keyboardType="visible-password"
+              onChangeText={handleInputConfirmPasswordChange}
             />
           </View>
          )}
@@ -117,6 +214,7 @@ export default function CardBodyLogin() {
           <ButtonConfirmLogin
             title={'Login'} 
             selected={true}
+            onPress={() => handleCreateUserSubmit(selectedScreen)}
           />
         </View>
 
@@ -128,15 +226,15 @@ export default function CardBodyLogin() {
           <View style={{flexDirection: 'row', marginTop: 25}}>
 
             <TouchableOpacity style={{paddingHorizontal: 5}}>
-              <AntDesign name="facebook-square" size={34}/> 
+              <AntDesign name="facebook-square" size={34} color={'#4464B4'}/> 
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{paddingHorizontal: 5}} onPress={() => handleGoogleLogin()}>
+              <AntDesign name="google" size={34} color={'black'}/> 
             </TouchableOpacity>
 
             <TouchableOpacity style={{paddingHorizontal: 5}}>
-              <AntDesign name="google" size={34}/> 
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{paddingHorizontal: 5}}>
-              <AntDesign name="instagram" size={34}/> 
+              <AntDesign name="twitter" size={34} color={'#1C9CF4'}/> 
             </TouchableOpacity>
           </View>
         </View>

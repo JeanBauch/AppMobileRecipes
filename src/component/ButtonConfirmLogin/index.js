@@ -4,9 +4,9 @@ import { RectButton } from 'react-native-gesture-handler';
 
 import colors from '../../styles/color';
 
-export default function ButtonConfirmLogin( {title} ){
+export default function ButtonConfirmLogin( {title, ...rest} ){
   return(
-    <RectButton style={ styles.container }>
+    <RectButton style={ styles.container } {...rest}>
       <Text style={styles.text}>{title}</Text>
     </RectButton>
   )
