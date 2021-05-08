@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         marginBottom: '4%',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        elevation: 5
     },
     instructionContainer:{
         paddingBottom: '5%'

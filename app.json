@@ -23,10 +23,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "android.recipe.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "facebookAutoInitEnabled": true
   }
 }

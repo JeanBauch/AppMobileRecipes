@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
 import { api } from '../../services/api';
+import { FAB } from 'react-native-paper';
 
 import Ingredients from '../../component/Ingredients';
 import Instructions from '../../component/Instructions';
+import color from '../../styles/color';
 
 
 export default function Detail( { route } ) {
@@ -13,6 +15,7 @@ export default function Detail( { route } ) {
     const [measureList, setMeasureList] = useState([]);
     const [instructionsString, setInstructionsString] = useState("");
     const [loaded, setLoaded] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         getMoreDetail();
@@ -57,37 +60,50 @@ export default function Detail( { route } ) {
         setInstructionsString(moreDetail.meals[0].strInstructions);
     }
 
+    const handlePressFavorite = () => {
+        console.log("fav!");
+        setIsFavorite(!isFavorite);
+    }
+
     return (
-        <ScrollView style={styles.container}>
-            <Image
-                source={{ uri: route.params.img }}
-                style={styles.image}
-                resizeMode = "cover"
-            />
-            
-            <View style = {styles.containerDetail}>
-                <View>
-                    <Text style={[styles.title]}>{route.params.name}</Text>
-                </View>
-
-                <View style = {styles.containerFilter}>
-                    <Text style ={styles.textDetail}>Category : {route.params.cat}</Text>
-                    <Text style ={[styles.textDetail, { marginRight: 52 } ]}>Area : {route.params.area}</Text>
-                </View>
-            </View>
-
-            {loaded ? (
-                <Ingredients
-                    ingredientList={ingredientsList}
-                    measureList={measureList}
+        <>
+            <ScrollView style={styles.container}>
+                <Image
+                    source={{ uri: route.params.img }}
+                    style={styles.image}
+                    resizeMode = "cover"
                 />
-            ) : null }
-            
-            <Instructions 
-                instructions={instructionsString}
-            />
+                
+                <View style = {styles.containerDetail}>
+                    <View>
+                        <Text style={[styles.title]}>{route.params.name}</Text>
+                    </View>
 
-        </ScrollView>
+                    <View style = {styles.containerFilter}>
+                        <Text style ={styles.textDetail}>Category : {route.params.cat}</Text>
+                        <Text style ={[styles.textDetail, { marginRight: 52 } ]}>Area : {route.params.area}</Text>
+                    </View>
+                </View>
+
+                {loaded ? (
+                    <Ingredients
+                        ingredientList={ingredientsList}
+                        measureList={measureList}
+                    />
+                ) : null }
+                
+                <Instructions 
+                    instructions={instructionsString}
+                />
+            </ScrollView>
+
+            <FAB 
+                style={styles.fab}
+                icon="heart"
+                color={ !isFavorite ? color.background : color.orangeDark3}
+                onPress={handlePressFavorite}
+            />
+        </>
     );
 }
 
@@ -95,11 +111,11 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         width: '100%',
-        backgroundColor: '#ededed'
+        backgroundColor: color.background
     },
     image:{
         width: '100%',
-        height: 350
+        height: 350,
     },
     containerDetail:{
         flex: 1,
@@ -110,7 +126,8 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: 15,
         borderBottomEndRadius: 15,
         marginBottom: '4%',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        elevation: 5,
     },
     title:{
         fontFamily: 'Montserrat_500Medium',
@@ -133,5 +150,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderBottomColor: '#DDD',
         marginVertical: '2%'
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
+        backgroundColor: color.orangePrimary,
     }
   });

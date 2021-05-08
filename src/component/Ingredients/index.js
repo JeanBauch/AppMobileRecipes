@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginBottom: '4%',
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        elevation: 5
     },
     title: {
         fontFamily: 'Montserrat_500Medium',

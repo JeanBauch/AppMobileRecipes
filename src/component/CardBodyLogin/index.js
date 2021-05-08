@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar} from 'react-native';
+import { Animated ,View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar} from 'react-native';
 import color from '../../styles/color';
 import ButtonConfirmLogin from '../ButtonConfirmLogin';
 import ButtonLogin from '../ButtonLogin';
 import { AntDesign } from '@expo/vector-icons';
-import { authDatabase, provider } from './../../config/firebase';
+import { authDatabase, provider, FirebaseOther, providerFacebook } from './../../config/firebase';
 import { useNavigation } from '@react-navigation/core';
+import * as Facebook from 'expo-facebook';
+import { facebookConfig } from '../../config/facebook';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,7 +23,7 @@ export default function CardBodyLogin() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isEmailCorrect, setIsEmailCorrect] = useState(true);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
-
+ 
   function handleSelectedScreen(screen) {
     setSelectedScreen(screen);
   }
@@ -93,30 +95,77 @@ export default function CardBodyLogin() {
   }
 
   function handleGoogleLogin(){
-    console.log("Google!");
-    authDatabase.signInWithRedirect(provider);
+    // console.log("Google!");
+    // authDatabase.signInWithRedirect(provider);
 
-    authDatabase.getRedirectResult()
-      .then((result) => {
-        if(result.credential) {
-          var credential = result.credential;
-          var token = credential.accessToken;
+    // authDatabase.getRedirectResult()
+    //   .then((result) => {
+    //     if(result.credential) {
+    //       var credential = result.credential;
+    //       var token = credential.accessToken;
 
-          console.log(credential);
-          console.log(token);
-        }
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
+    //       console.log(credential);
+    //       console.log(token);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     var email = error.email;
+    //     var credential = error.credential;
 
-        console.log(errorCode);
-        console.log(errorMessage);
-        console.log(email);
-        console.log(credential);
-      });
+    //     console.log(errorCode);
+    //     console.log(errorMessage);
+    //     console.log(email);
+    //     console.log(credential);
+    //   });
+  }
+
+  async function handleFacebookLogin(){
+
+    // await Facebook.initializeAsync({
+    //   appId: facebookConfig.appId,
+    //   appName: 'MobileRecipe',
+    // });
+
+    // const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+    //   { permissions: ['public_profile', 'email'] },
+    // );
+    // console.log(type);
+    // console.log(token);
+
+    // // if(type === 'success' && token) {
+    // //   const credential = FirebaseOther.auth.FacebookAuthProvider.credential(token);
+
+    // //   const response = await authDatabase.signInWithCredential(credential);
+    // //   console.log(response);
+    // // }
+
+  //   FirebaseOther.auth()
+  //     .getRedirectResult()
+  //       .then((result) => {
+  //       if(result.credential) {
+  //         // @type {firebase.auth.OAuthCredential}
+  //         var credential = result.credential;
+
+  //         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+  //         var token = credential.accessToken;
+
+  //         // The signed-in user info.
+  //         var user = result.user;
+  //       }
+  //     }).catch((error) => {
+  //         var errorCode = error.code;
+  //         var errorMessage = error.message;
+  //         var email = error.email;
+  //         var credential = error.credential;
+  //         console.log(errorCode);
+  //         console.log(errorMessage);
+  //         console.log(email);
+  //         console.log(credential);
+  //     })
+  //   FirebaseOther.auth().signInWithRedirect(providerFacebook);
+
   }
 
   return(
@@ -126,19 +175,18 @@ export default function CardBodyLogin() {
         barStyle={'dark-content'}
       />
       <View style={styles.content}>
-        <View style={styles.selectLoginSignUp}>
-          <ButtonLogin 
-            title={'Login'} 
-            selected={selectedScreen === 'Login'}
-            onPress={() => handleSelectedScreen('Login')}
-          />
-          <ButtonLogin 
-            title={'Sign Up'} 
-            selected={selectedScreen === 'SignUp'}
-            onPress={() => handleSelectedScreen('SignUp')}
-          />
+        <View style={styles.selectLoginSignUp} >
+            <ButtonLogin 
+              title={'Login'} 
+              selected={selectedScreen === 'Login'}
+              onPress={() => handleSelectedScreen('Login')}
+            />
+            <ButtonLogin 
+              title={'Sign Up'} 
+              selected={selectedScreen === 'SignUp'}
+              onPress={() => handleSelectedScreen('SignUp')}
+            />
         </View>
-
         
         {selectedScreen === 'Login' ? 
           <View style={{marginTop: 50}}>
@@ -225,7 +273,7 @@ export default function CardBodyLogin() {
 
           <View style={{flexDirection: 'row', marginTop: 25}}>
 
-            <TouchableOpacity style={{paddingHorizontal: 5}}>
+            <TouchableOpacity style={{paddingHorizontal: 5}} onPress={() => handleFacebookLogin()}>
               <AntDesign name="facebook-square" size={34} color={'#4464B4'}/> 
             </TouchableOpacity>
 
@@ -266,7 +314,7 @@ const styles = StyleSheet.create({
   selectLoginSignUp: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    //alignItems: 'center',
     alignSelf: 'center',
     width: 225,
     marginTop: 50,

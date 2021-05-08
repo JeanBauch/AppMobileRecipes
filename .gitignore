@@ -9,5 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 src/config/firebase.js
+src/config/facebook.js
 # macOS
 .DS_Store
