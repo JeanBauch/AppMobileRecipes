@@ -6,7 +6,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Archivo_400Regular} from '@expo-google-fonts/archivo';
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_300Light} from '@expo-google-fonts/montserrat'
 
-import Routes from './src/router';
+import Routes from './src/routes/router';
 
 export default function App() {
 

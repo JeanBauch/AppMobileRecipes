@@ -6,6 +6,8 @@ import { Modalize } from 'react-native-modalize';
 import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
+import color from '../../styles/color';
+import { Load } from '../../component/Load';
 
 const sigla = {
   'American': 'us',
@@ -48,6 +50,7 @@ export default function Home() {
   const [prosRecipeSelected, setProsRecipeSelected] = useState([]);
   const [reload, setReload] = useState(false);
   const [siglaFilterName, setSiglaFilterName] = useState("");
+  const [isReload, setIsReload] = useState(false);
 
   const modalizeRefCategory = useRef(null);
   const modalizeRefArea = useRef(null);
@@ -130,6 +133,7 @@ export default function Home() {
       })
       Promise.all(responseObj).then( () => {
         setProsRecipeSelected(filterDetailAux);
+        setIsReload(true);
       } )
     } )
   }
@@ -194,7 +198,10 @@ export default function Home() {
     //console.log(parts);
   }
 
- return (
+  if(!loaded)
+    return <Load />
+
+  return (
    <View style={styles.container}>
     <View style={styles.header}>
       <View style={styles.filterContainer}> 
@@ -210,7 +217,6 @@ export default function Home() {
     </View>
 
     <View style={styles.line} />
-
 
     {!reload ? (
       <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
@@ -231,26 +237,26 @@ export default function Home() {
       </View>
 
     </ScrollView>
-    ) : (
+    ) : isReload ? (
       <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
-    
-      <View style={styles.scrollContainer}>
-        {
-          prosRecipeSelected.map( (pr, index) => (
-            <Recipes
-            name={pr.strMeal}
-            img={pr.strMealThumb}
-            category={pr.strCategory}
-            area={pr.strArea}
-            onClick={ () => navigation.navigate('Detail', {id: pr.idMeal, name: pr.strMeal, img: pr.strMealThumb, cat: pr.strCategory, area: pr.strArea}) }
-            key={pr.idMeal}
-          />
-          ))
-        }
-      </View>
-
-    </ScrollView>
-    )  }
+        <View style={styles.scrollContainer}>
+          {
+            prosRecipeSelected.map( (pr, index) => (
+              <Recipes
+              name={pr.strMeal}
+              img={pr.strMealThumb}
+              category={pr.strCategory}
+              area={pr.strArea}
+              onClick={ () => navigation.navigate('Detail', {id: pr.idMeal, name: pr.strMeal, img: pr.strMealThumb, cat: pr.strCategory, area: pr.strArea}) }
+              key={pr.idMeal}
+            />
+            ))
+          }
+        </View>
+      </ScrollView>
+    ) : (
+      <Load />
+    )}
     
 
     <Modalize
@@ -291,10 +297,10 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     width: '100%',
-    backgroundColor: '#FFF'
+    backgroundColor: color.background,
   },
   header:{
-    marginBottom: 5
+    marginBottom: 5,
   },
   scrollContainer:{
     flexDirection: 'row',
@@ -306,24 +312,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: '3%',
     height: 43,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   filterBtn:{
     width: 120,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#D8d8d8',
+    //borderColor: '#D8d8d8',
+    borderColor: color.orangeDark3,
+    //backgroundColor: color.orangeLight2,
     borderWidth: 1,
     borderRadius: 10,
     marginTop: 5,
   },
   text:{
-    fontFamily: 'Montserrat_300Light',
+    fontFamily: 'Montserrat_500Medium',
     fontSize:15,
+    color: color.orangeDark3,
   },
   line:{
-    borderBottomColor: '#D8d8d8',
+    //borderBottomColor: '#D8d8d8',
+    borderBottomColor: color.lineStyle,
     borderBottomWidth: 2,
   },
   recipesContainer:{

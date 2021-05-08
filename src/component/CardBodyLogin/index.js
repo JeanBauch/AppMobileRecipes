@@ -208,7 +208,7 @@ export default function CardBodyLogin() {
               ]}
               placeholder="Senha"
               textContentType="password"
-              keyboardType="visible-password"
+              secureTextEntry={true}
               onChangeText={handleInputPasswordChange}
             />
             <TouchableOpacity style={{alignSelf: 'flex-end'}}>
@@ -240,7 +240,7 @@ export default function CardBodyLogin() {
               ]}
               placeholder="Senha"
               textContentType="password"
-              keyboardType="visible-password"
+              secureTextEntry={true}
               onChangeText={handleInputPasswordChange}
             />
             <TextInput 
@@ -251,7 +251,7 @@ export default function CardBodyLogin() {
               ]}
               placeholder="Confirmar Senha"
               textContentType="password"
-              keyboardType="visible-password"
+              secureTextEntry={true}
               onChangeText={handleInputConfirmPasswordChange}
             />
           </View>
