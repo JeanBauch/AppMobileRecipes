@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import { api } from '../../services/api';
 import { FAB } from 'react-native-paper';
 
 import Ingredients from '../../component/Ingredients';
 import Instructions from '../../component/Instructions';
 import color from '../../styles/color';
+import { saveFavoriteRecipe } from '../../libs/storage';
 
 
 export default function Detail( { route } ) {
-
+    const recipe = route.params;
+    
     const [moreDetail, setMoreDetail] = useState({});
     const [ingredientsList, setIngredientsList] = useState([]);
     const [measureList, setMeasureList] = useState([]);
@@ -60,9 +62,14 @@ export default function Detail( { route } ) {
         setInstructionsString(moreDetail.meals[0].strInstructions);
     }
 
-    const handlePressFavorite = () => {
+    async function handlePressFavorite () {
         console.log("fav!");
         setIsFavorite(!isFavorite);
+        try{
+            await saveFavoriteRecipe(recipe);
+        } catch{
+            Alert.alert('Nao foi possivel salvar. 😢 ');
+        }
     }
 
     return (

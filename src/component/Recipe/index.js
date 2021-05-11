@@ -12,7 +12,11 @@ export default function Recipes(props) {
  }
 
  return (
-   <TouchableOpacity style={styles.container} onPress={props.onClick}>
+   <TouchableOpacity 
+    style={styles.container} 
+    onPress={props.onClick}
+    activeOpacity={0.5}
+  >
       <Image
         source={ {uri: props.img} }
         style={styles.recipeImg}
@@ -31,7 +35,8 @@ const styles = StyleSheet.create({
     container:{
       paddingVertical: '2%',
       //paddingHorizontal: '5%',
-      alignItems: 'center',  
+      alignItems: 'center',
+      //margin: 10, 
     },
     recipeImg:{
       width: 130,

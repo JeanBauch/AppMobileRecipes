@@ -78,18 +78,16 @@ function Routes(){
                             ),
                         }}
                     />
-                    
-                    <Stack.Screen 
-                        name="Favorites"
-                        component={AuthRoutes}
-                    />
-
                     <Stack.Screen 
                         name="Login"
                         component={Login}
                         options={{
                             headerShown: false
                         }}
+                    />
+                    <Stack.Screen 
+                        name="Favorites"
+                        component={AuthRoutes}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

@@ -171,6 +171,7 @@ export default function Home() {
         setPressSelectFilter(true); 
         setReload(true);  
         onCloseModal('default');
+        setIsReload(false);
       } }
     >
       <Text style = { { color: '#FFFFFF', alignSelf: 'center' } }>Ver resultados</Text>
@@ -271,7 +272,7 @@ export default function Home() {
         keyExtractor: item => item.id,
         showsVerticalScrollIndicator: false,
       }}
-      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("c") } }
+      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("c"); } }
     />
     
     <Modalize
@@ -286,7 +287,7 @@ export default function Home() {
         keyExtractor: item => item.name,
         showsVerticalScrollIndicator: false,
       }}
-      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("a") } }
+      onOpen={ () => { setSelectCategories([]); setReload(false); setSiglaFilterName("a"); } }
     />
 
   </View>
@@ -375,6 +376,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     borderRadius: 8,
-    backgroundColor: '#EA1D2C'
+    //backgroundColor: '#EA1D2C'
+    backgroundColor: color.orangePrimary,
   }
 });
