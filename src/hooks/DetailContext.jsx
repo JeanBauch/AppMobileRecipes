@@ -1,4 +1,5 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
+import { loadRecipe } from '../libs/storage';
 import { api } from '../services/api';
 
 const DetailContext = createContext({});
@@ -50,6 +51,24 @@ export function DetailProvider({ children }) {
 
     const [detail, setDetail] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [listFavorites, setListFavorites] = useState([]);
+    const [newFavorite, setNewFavorite] = useState();
+    const [isRemoveFavoriteList, setIsRemoveFavoriteList] = useState(false);
+
+    useEffect(() => {
+        getFavorites();
+    },[]);
+
+    useEffect(() => {
+        if(newFavorite)
+            getFavorites();
+
+    },[newFavorite]);
+
+    useEffect(() => {
+        if(isRemoveFavoriteList)
+            getFavorites();
+    },[isRemoveFavoriteList]);
 
     const getDestaques = async () => {
         const detailAux = [];
@@ -65,8 +84,35 @@ export function DetailProvider({ children }) {
         } )
     }
 
+    const getFavorites = async() => {
+        const idFavorites = await loadRecipe();
+        const listId = idFavorites.map( (recipe) => {
+            return {
+                id: recipe.id
+            }
+        })
+        setListFavorites(listId);
+    }
+
+    function handleRemoveFavoriteList(isActive) {
+        setIsRemoveFavoriteList(isActive);
+    }
+
+    function handleNewFavorite(isActive) {
+        setNewFavorite(isActive);
+    }
+
     return(
-        <DetailContext.Provider value = {{ detail, getDestaques, loaded }}>
+        <DetailContext.Provider value = {{ 
+            detail, 
+            getDestaques, 
+            loaded, 
+            listFavorites, 
+            newFavorite, 
+            handleNewFavorite,
+            isRemoveFavoriteList,
+            handleRemoveFavoriteList, 
+        }}>
             {children}
         </DetailContext.Provider>
     );

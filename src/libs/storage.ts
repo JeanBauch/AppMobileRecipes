@@ -19,7 +19,6 @@ export async function saveFavoriteRecipe(recipe) {
     }))
     console.log("salvou!");
 
-
   } catch(error) {
     throw new Error(error);
   }
@@ -44,4 +43,14 @@ export async function loadRecipe() {
   } catch(error) {
     throw new Error(error);
   }
+}
+
+export async function removeRecipe(id) {
+  console.log("---> Removendo <----");
+  const data = await AsyncStorage.getItem('@plantmanager:favrecipes');
+  const recipes = data ? (JSON.parse(data)) : {};
+
+  delete recipes[id];
+
+  await AsyncStorage.setItem('@plantmanager:favrecipes', JSON.stringify(recipes));
 }

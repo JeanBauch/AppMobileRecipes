@@ -6,21 +6,26 @@ import { FAB } from 'react-native-paper';
 import Ingredients from '../../component/Ingredients';
 import Instructions from '../../component/Instructions';
 import color from '../../styles/color';
-import { saveFavoriteRecipe } from '../../libs/storage';
+import { saveFavoriteRecipe, removeRecipe } from '../../libs/storage';
+import { useDetail } from '../../hooks/DetailContext';
 
 
 export default function Detail( { route } ) {
     const recipe = route.params;
     
+    const { listFavorites, newFavorite, handleNewFavorite, handleRemoveFavoriteList } = useDetail();
     const [moreDetail, setMoreDetail] = useState({});
     const [ingredientsList, setIngredientsList] = useState([]);
     const [measureList, setMeasureList] = useState([]);
     const [instructionsString, setInstructionsString] = useState("");
     const [loaded, setLoaded] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [changeStateFavorite, setChangeStateFavorite] = useState();
+    const [isFavoriteList, setIsFavoriteList] = useState(false);
 
     useEffect(() => {
         getMoreDetail();
+        getListFavorites();
     }, []);
 
     useEffect(() => {
@@ -29,6 +34,22 @@ export default function Detail( { route } ) {
         getinstructionsString();
         getIngredientList();
     }, [loaded]);
+
+    useEffect(() => {
+        if(isFavorite && !isFavoriteList)  {
+            saveRecipeStorage();
+        } else {
+            if(changeStateFavorite)
+                handleRemoveFavorite();
+        }
+    },[isFavorite]);
+
+    useEffect(() => {
+        if(newFavorite) {
+            handleNewFavorite(false);
+        }
+        getListFavorites();
+    },[newFavorite]);
 
     const getMoreDetail = async () => {
         const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.id}`);
@@ -63,12 +84,38 @@ export default function Detail( { route } ) {
     }
 
     async function handlePressFavorite () {
-        console.log("fav!");
         setIsFavorite(!isFavorite);
+        setChangeStateFavorite(true);
+    }
+
+    async function saveRecipeStorage() {
         try{
             await saveFavoriteRecipe(recipe);
+            setChangeStateFavorite(true);
+            handleNewFavorite(true);
+            handleRemoveFavoriteList(false);
         } catch{
             Alert.alert('Nao foi possivel salvar. 😢 ');
+        }
+    }
+
+    const getListFavorites = () => {
+        listFavorites.map( (idRecipes) => {
+            if(idRecipes.id == recipe.id) {
+                setIsFavorite(true);
+                setIsFavoriteList(true);
+                handleRemoveFavoriteList(false);
+            }
+        });
+    }
+
+
+    async function handleRemoveFavorite() {
+        try {
+            await removeRecipe(recipe.id);
+            handleRemoveFavoriteList(true);
+        } catch(error) {
+            Alert.alert('Nao foi possivel remover. 😢 ');
         }
     }
 
