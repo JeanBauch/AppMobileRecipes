@@ -193,6 +193,7 @@ export default function Home() {
         category: d.meals[0].strCategory,
         area: d.meals[0].strArea,
         img: d.meals[0].strMealThumb,
+        link: d.meals[0].strYoutube
       }  
     } )
     setpropsRecipe(parts);
@@ -230,7 +231,7 @@ export default function Home() {
                 img={pr.img}
                 category={pr.category}
                 area={pr.area}
-                onClick={ () => navigation.navigate('Detail', {id: pr.id, name: pr.name, img: pr.img, cat: pr.category, area: pr.area}) }
+                onClick={ () => navigation.navigate('Detail', {id: pr.id, name: pr.name, img: pr.img, cat: pr.category, area: pr.area, link: pr.link}) }
                 key={pr.id}
               />
           ))
@@ -244,13 +245,13 @@ export default function Home() {
           {
             prosRecipeSelected.map( (pr, index) => (
               <Recipes
-              name={pr.strMeal}
-              img={pr.strMealThumb}
-              category={pr.strCategory}
-              area={pr.strArea}
-              onClick={ () => navigation.navigate('Detail', {id: pr.idMeal, name: pr.strMeal, img: pr.strMealThumb, cat: pr.strCategory, area: pr.strArea}) }
-              key={pr.idMeal}
-            />
+                name={pr.strMeal}
+                img={pr.strMealThumb}
+                category={pr.strCategory}
+                area={pr.strArea}
+                onClick={ () => navigation.navigate('Detail', {id: pr.idMeal, name: pr.strMeal, img: pr.strMealThumb, cat: pr.strCategory, area: pr.strArea, link: pr.strYoutube}) }
+                key={pr.idMeal}
+              />
             ))
           }
         </View>

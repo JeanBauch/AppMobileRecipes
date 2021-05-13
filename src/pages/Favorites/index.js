@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Load } from '../../component/Load';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
-import { saveFavoriteRecipe, loadRecipe } from '../../libs/storage'
+import { loadRecipe } from '../../libs/storage'
 import color from '../../styles/color';
 
 export default function Favorites() {
@@ -68,7 +68,7 @@ export default function Favorites() {
                 img={item.img}
                 category={item.cat}
                 area={item.area}
-                onClick={ () => navigation.navigate('Detail', {id: item.id, name: item.name, img: item.img, cat: item.cat, area: item.area}) }
+                onClick={ () => navigation.navigate('Detail', {id: item.id, name: item.name, img: item.img, cat: item.cat, area: item.area, link: item.link}) }
                 key={item.id}
               />
             </View>

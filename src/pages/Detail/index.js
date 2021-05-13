@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Alert} from 'react-native';
 import { api } from '../../services/api';
 import { FAB } from 'react-native-paper';
 
@@ -8,6 +8,7 @@ import Instructions from '../../component/Instructions';
 import color from '../../styles/color';
 import { saveFavoriteRecipe, removeRecipe } from '../../libs/storage';
 import { useDetail } from '../../hooks/DetailContext';
+import CardYouTube from '../../component/CardYouTube';
 
 
 export default function Detail( { route } ) {
@@ -109,7 +110,6 @@ export default function Detail( { route } ) {
         });
     }
 
-
     async function handleRemoveFavorite() {
         try {
             await removeRecipe(recipe.id);
@@ -149,6 +149,8 @@ export default function Detail( { route } ) {
                 <Instructions 
                     instructions={instructionsString}
                 />
+
+                <CardYouTube thumb={recipe.img} link={recipe.link}/>
             </ScrollView>
 
             <FAB 
