@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, Alert} from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, Alert, Platform, TouchableOpacity} from 'react-native';
 import { api } from '../../services/api';
 import { FAB } from 'react-native-paper';
+import  DateTimePicker, { Event } from '@react-native-community/datetimepicker'
+import { format, isBefore } from 'date-fns';
 
 import Ingredients from '../../component/Ingredients';
 import Instructions from '../../component/Instructions';
 import color from '../../styles/color';
-import { saveFavoriteRecipe, removeRecipe } from '../../libs/storage';
+import { saveFavoriteRecipe, removeRecipe, saveNotification } from '../../libs/storage';
 import { useDetail } from '../../hooks/DetailContext';
 import CardYouTube from '../../component/CardYouTube';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Detail( { route } ) {
     const recipe = route.params;
@@ -23,6 +25,10 @@ export default function Detail( { route } ) {
     const [isFavorite, setIsFavorite] = useState(false);
     const [changeStateFavorite, setChangeStateFavorite] = useState();
     const [isFavoriteList, setIsFavoriteList] = useState(false);
+    const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
+    const [showDatePickerAndroidDate, setShowDatePickerAndroidDate] = useState(false);
 
     useEffect(() => {
         getMoreDetail();
@@ -51,6 +57,12 @@ export default function Detail( { route } ) {
         }
         getListFavorites();
     },[newFavorite]);
+
+    useEffect(() => {
+        if(showDatePickerAndroidDate) {
+            setShowDatePicker(false);
+        }
+    },[showDatePickerAndroidDate]);
 
     const getMoreDetail = async () => {
         const { data } = await api.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${route.params.id}`);
@@ -119,6 +131,50 @@ export default function Detail( { route } ) {
         }
     }
 
+    function handleChangeTime(event, dateTime) {
+        if(Platform.OS == 'android') {
+            setShowDatePicker(oldState => !oldState);
+        }
+
+        if(dateTime && isBefore(dateTime, new Date() )) {
+            setSelectedDateTime(new Date());
+            return Alert.alert("Escolha uma hora no futuro! ⏰");
+        }
+
+        if(dateTime) {
+            setSelectedDateTime(dateTime);
+            setShowDatePickerAndroidDate(true);
+        }
+        console.log(dateTime);
+    }
+
+    function handleChangeDate(event, dateTime) {
+        if(Platform.OS == 'android') {
+            setShowDatePickerAndroidDate(false);
+        }
+
+        if(dateTime) {
+            setSelectedDate(dateTime);
+        }
+    }
+
+    function handleOpenDateTimePickerForAndroid() {
+        setShowDatePicker(oldState => !oldState);
+    }
+
+    function handleSetNotification() {
+        try{
+            saveNotification({
+                ...recipe,
+                dateNotification: selectedDate,
+                dateTimeNotification: selectedDateTime
+            });
+            console.log("Deu Bom!");
+        } catch {
+            console.log("Deu ruim");
+        }
+    }
+
     return (
         <>
             <ScrollView style={styles.container}>
@@ -151,6 +207,49 @@ export default function Detail( { route } ) {
                 />
 
                 <CardYouTube thumb={recipe.img} link={recipe.link}/>
+
+                <View>
+                    <Text>Gostou da Receita, mas deseja faze-la em outro momento?</Text>
+
+                    {showDatePicker && (
+                        <DateTimePicker 
+                            value={selectedDateTime}
+                            mode="time"
+                            display="spinner"
+                            onChange={handleChangeTime}
+                        />
+                    )}
+
+                    {showDatePickerAndroidDate && (
+                        <DateTimePicker 
+                            value={selectedDate}
+                            mode="date"
+                            display="calendar"
+                            onChange={handleChangeDate}
+                        />
+                    )}
+
+                    {Platform.OS === 'android' && (
+                        <TouchableOpacity
+                            onPress={handleOpenDateTimePickerForAndroid}
+                        >
+                            <Text>
+                                {`Mudar o dia: ${format(selectedDate, 'dd/MM/yyyy')}`}
+                                {`Mudar ${format(selectedDateTime, 'HH:mm')}`}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                        onPress={handleSetNotification}
+                    >
+                        <MaterialCommunityIcons 
+                            name="alarm"
+                            size={24}
+                        />
+                    </TouchableOpacity>
+
+                </View>
             </ScrollView>
 
             <FAB 

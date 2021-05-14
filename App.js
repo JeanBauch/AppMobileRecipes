@@ -9,7 +9,7 @@ import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_300Light} from 
 import Routes from './src/routes/router';
 
 export default function App() {
-
+  console.ignoredYellowBox = ['Setting a timer'];
   let [fontsLoaded] = useFonts({
     Montserrat_400Regular,
     Montserrat_500Medium,
@@ -17,11 +17,9 @@ export default function App() {
 
   });
 
-
   if(!fontsLoaded){
     return <AppLoading />;
   }
-
 
   return (
     <>
