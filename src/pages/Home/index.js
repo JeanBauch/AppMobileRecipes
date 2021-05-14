@@ -209,11 +209,11 @@ export default function Home() {
       <View style={styles.filterContainer}> 
 
         <TouchableOpacity style={[styles.filterBtn, { marginLeft: 30 }]} onPress={onOpenCategory}>
-          <Text style={styles.text}>Category</Text>
+          <Text style={styles.text}>Categoria</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.filterBtn, { marginRight: 30 }]} onPress={onOpenArea}>
-          <Text style={styles.text}>Area</Text>
+          <Text style={styles.text}>País</Text>
         </TouchableOpacity>
       </View>
     </View>

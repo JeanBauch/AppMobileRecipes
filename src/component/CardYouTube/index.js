@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 5,
     paddingVertical: '5%',
-    marginBottom: 80
   },
   text: {
     fontFamily: 'Montserrat_400Regular',

@@ -87,6 +87,9 @@ export async function saveNotification(recipe) {
   const dateDiff = differenceInSeconds(targetDate, now);
   console.log(dateDiff);
 
+  if(dateDiff < 0)
+    return
+
   const notificationId = await Notifications.scheduleNotificationAsync(
     {
       content: {
@@ -96,7 +99,7 @@ export async function saveNotification(recipe) {
         priority: Notifications.AndroidNotificationPriority.HIGH,
       },
       trigger: {
-        seconds: dateDiff
+        seconds: dateDiff < 60 ? 60 : dateDiff
       }
     }
   )

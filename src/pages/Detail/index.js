@@ -15,7 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Detail( { route } ) {
     const recipe = route.params;
-    
+
     const { listFavorites, newFavorite, handleNewFavorite, handleRemoveFavoriteList } = useDetail();
     const [moreDetail, setMoreDetail] = useState({});
     const [ingredientsList, setIngredientsList] = useState([]);
@@ -29,6 +29,7 @@ export default function Detail( { route } ) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
     const [showDatePickerAndroidDate, setShowDatePickerAndroidDate] = useState(false);
+    const [iconAlarm, setIconAlarm] = useState('alarm');
 
     useEffect(() => {
         getMoreDetail();
@@ -145,13 +146,17 @@ export default function Detail( { route } ) {
             setSelectedDateTime(dateTime);
             setShowDatePickerAndroidDate(true);
         }
-        console.log(dateTime);
     }
 
     function handleChangeDate(event, dateTime) {
+        const now = new Date();
+
         if(Platform.OS == 'android') {
             setShowDatePickerAndroidDate(false);
         }
+
+        if( (isBefore(dateTime.getDate(), now.getDate())) || (isBefore(dateTime.getMonth(), now.getMonth())) )
+            return Alert.alert("Escolha uma hora no futuro! ⏰");
 
         if(dateTime) {
             setSelectedDate(dateTime);
@@ -169,7 +174,8 @@ export default function Detail( { route } ) {
                 dateNotification: selectedDate,
                 dateTimeNotification: selectedDateTime
             });
-            console.log("Deu Bom!");
+            setIconAlarm("alarm-check");
+            Alert.alert("Lembrete salvo com sucesso! 🔔");
         } catch {
             console.log("Deu ruim");
         }
@@ -190,8 +196,8 @@ export default function Detail( { route } ) {
                     </View>
 
                     <View style = {styles.containerFilter}>
-                        <Text style ={styles.textDetail}>Category : {route.params.cat}</Text>
-                        <Text style ={[styles.textDetail, { marginRight: 52 } ]}>Area : {route.params.area}</Text>
+                        <Text style ={styles.textDetail}>Categoria : {route.params.cat}</Text>
+                        <Text style ={[styles.textDetail, { marginRight: 52 } ]}>País : {route.params.area}</Text>
                     </View>
                 </View>
 
@@ -208,14 +214,53 @@ export default function Detail( { route } ) {
 
                 <CardYouTube thumb={recipe.img} link={recipe.link}/>
 
-                <View>
-                    <Text>Gostou da Receita, mas deseja faze-la em outro momento?</Text>
+                <View style={styles.containerAlarm}>
 
+                    <Text style={[styles.title, {alignSelf: 'center'}]}>Gostou da Receita?</Text>
+                    <Text style={[styles.textDetail, {alignSelf: 'center'}]}>Mas deseja fazer em outro momento?</Text>
+                    
+                    <View style={{flexDirection: 'row', justifyContent: 'space-around', flex: 1, marginBottom: '5%'}}>
+                        <View style={styles.salveAlarmContainer}>
+                            <Text style={[styles.textDetail, {fontSize: 18, color: color.orangeDark3, marginBottom: '5%'}]}>
+                                {format(selectedDate, 'dd - MMM')}
+                            </Text>
+
+                            <TouchableOpacity
+                                onPress={handleSetNotification}
+                                style={styles.buttonAlarmContainer}
+                            >
+                                <MaterialCommunityIcons 
+                                    name={iconAlarm}
+                                    size={45}
+                                    color={color.orangeDark3}
+                                />
+                            </TouchableOpacity>
+
+                            <Text style={[styles.textDetail, {color: color.orangeDark3, marginTop: '1%'}]}>
+                                Salvar
+                            </Text>
+                        </View>
+
+                        <View>
+                            {Platform.OS === 'android' && (
+                                <TouchableOpacity
+                                    onPress={handleOpenDateTimePickerForAndroid}
+                                >
+                                    <Text style={[styles.textDetail, {fontSize: 12, color: color.orangeDark3, textAlign: 'center'}]}>
+                                        Escolha a melhor data hora{'\n'}para ser lembrado:
+                                    </Text>
+                                    <Text style={styles.textHours}>
+                                        {format(selectedDateTime, 'HH:mm')}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
                     {showDatePicker && (
                         <DateTimePicker 
                             value={selectedDateTime}
                             mode="time"
-                            display="spinner"
+                            display="default"
                             onChange={handleChangeTime}
                         />
                     )}
@@ -228,27 +273,6 @@ export default function Detail( { route } ) {
                             onChange={handleChangeDate}
                         />
                     )}
-
-                    {Platform.OS === 'android' && (
-                        <TouchableOpacity
-                            onPress={handleOpenDateTimePickerForAndroid}
-                        >
-                            <Text>
-                                {`Mudar o dia: ${format(selectedDate, 'dd/MM/yyyy')}`}
-                                {`Mudar ${format(selectedDateTime, 'HH:mm')}`}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-
-                    <TouchableOpacity
-                        onPress={handleSetNotification}
-                    >
-                        <MaterialCommunityIcons 
-                            name="alarm"
-                            size={24}
-                        />
-                    </TouchableOpacity>
-
                 </View>
             </ScrollView>
 
@@ -312,5 +336,32 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: color.orangePrimary,
-    }
+    },
+    containerAlarm: {
+        borderColor: '#C0C0C0',
+        borderWidth: 1,
+        borderRadius: 15,
+        marginBottom: '4%',
+        backgroundColor: '#fff',
+        elevation: 5,
+        marginBottom: '20%'
+    },
+    salveAlarmContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonAlarmContainer: {
+        padding: 10,
+        backgroundColor: color.orangeLight2,
+        borderRadius: 60,
+        elevation: 10,
+    },
+    textHours: {
+        marginTop: '2%',
+        textAlign: 'center',
+        fontFamily: 'Montserrat_400Regular',
+        fontSize: 32,
+        color: color.orangeDark3,
+        letterSpacing: 5,
+    },
   });
