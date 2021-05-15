@@ -54,6 +54,7 @@ export function DetailProvider({ children }) {
     const [listFavorites, setListFavorites] = useState([]);
     const [newFavorite, setNewFavorite] = useState();
     const [isRemoveFavoriteList, setIsRemoveFavoriteList] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
 
     useEffect(() => {
         getFavorites();
@@ -102,6 +103,10 @@ export function DetailProvider({ children }) {
         setNewFavorite(isActive);
     }
 
+    function handleSetIslogged(isActive) {
+        setIsLogged(isActive);
+    }
+
     return(
         <DetailContext.Provider value = {{ 
             detail, 
@@ -112,6 +117,8 @@ export function DetailProvider({ children }) {
             handleNewFavorite,
             isRemoveFavoriteList,
             handleRemoveFavoriteList, 
+            isLogged,
+            setIsLogged,
         }}>
             {children}
         </DetailContext.Provider>

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "appMobileLoja",
-    "slug": "appMobileLoja",
+    "name": "Enjoy your Meal",
+    "slug": "Enjoy-your-Meal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

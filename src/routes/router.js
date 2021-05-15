@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import Home from '../pages/Home';
 import Detail from '../pages/Detail';
-import { DetailProvider } from '../hooks/DetailContext';
+import { DetailProvider, useDetail } from '../hooks/DetailContext';
 import Login from '../pages/Login';
 import color from '../styles/color';
 import AuthRoutes from './tab.routes';
@@ -34,6 +34,7 @@ function Routes(){
                             },
                             headerRight: () => {
                                 const navigation = useNavigation();
+                                const { isLogged } = useDetail();
                                 return(
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity style={{ marginRight: 15 }}>
@@ -46,7 +47,7 @@ function Routes(){
                                         
                                         <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigation.navigate('Login')}>
                                             <Feather
-                                                name = "user"
+                                                name={isLogged? "user-check" : "user"}
                                                 size={24}
                                                 color={color.orangeDark3}
                                             />

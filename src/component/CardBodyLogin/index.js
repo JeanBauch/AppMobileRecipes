@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Animated ,View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar} from 'react-native';
+import { Animated ,View, StyleSheet, TextInput, Dimensions, TouchableOpacity, Text, StatusBar, Alert} from 'react-native';
 import color from '../../styles/color';
 import ButtonConfirmLogin from '../ButtonConfirmLogin';
 import ButtonLogin from '../ButtonLogin';
@@ -8,6 +8,7 @@ import { authDatabase, provider, FirebaseOther, providerFacebook } from './../..
 import { useNavigation } from '@react-navigation/core';
 import * as Facebook from 'expo-facebook';
 import { facebookConfig } from '../../config/facebook';
+import { useDetail } from '../../hooks/DetailContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,6 +16,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function CardBodyLogin() {
   const navigation = useNavigation();
 
+  const { setIsLogged } = useDetail();
   const [selectedScreen, setSelectedScreen] = useState('Login');
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -52,15 +54,6 @@ export default function CardBodyLogin() {
 
   function handleCreateUserSubmit(screen){
 
-    // console.log(email);
-    // console.log(password);
-
-    if(password === confirmPassword) {
-      setIsPasswordCorrect(true);
-    } else {
-      setIsPasswordCorrect(false);
-    }
-
     if(screen === "Login") {
       authDatabase.signInWithEmailAndPassword(email, password)
         .then((userCrential) => {
@@ -68,11 +61,21 @@ export default function CardBodyLogin() {
           console.log("Logado com sucesso!");
           setEmail('');
           setPassword('');
+          setIsLogged(true);
           navigation.navigate("Home");
         })
         .catch((error) => {
           var errorCode = error.code;
           var errorMessage = error.message;
+          if((errorCode === "auth/user-not-found") || (errorCode === "auth/invalid-email"))
+            setIsEmailCorrect(false);
+          else
+            setIsEmailCorrect(true);
+          if(errorCode === "auth/wrong-password") {
+            Alert.alert("Senha incorreta, verifique novamente!");
+            setIsPasswordCorrect(false);
+          } else 
+            setIsPasswordCorrect(true);
           console.log(errorCode);
           console.log("-->");
           console.log(errorMessage);
@@ -80,18 +83,55 @@ export default function CardBodyLogin() {
 
 
     } else if (screen === "SignUp") {
+
+      if(password === confirmPassword) {
+        setIsPasswordCorrect(true);
+      } else {
+        setIsPasswordCorrect(false);
+        return
+      }
+
       authDatabase.createUserWithEmailAndPassword(email, password)
       .then((userCrential) => {
         var user = userCrential.user;
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setIsLogged(true);
+        navigation.navigate("Home");
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
+        if(errorCode === "auth/invalid-email")
+          setIsEmailCorrect(false);
+        else
+          setIsEmailCorrect(true);
+        if(errorCode === "auth/weak-password") {
+          Alert.alert("A senha deve conter mais de 6 caracteres!");
+          setIsPasswordCorrect(false);
+        } else 
+          setIsPasswordCorrect(true);
         console.log(errorCode);
         console.log("-->");
         console.log(errorMessage);
       });
     }
+  }
+
+  function handleForgetPassword(){
+    if(email != null) {
+      authDatabase.sendPasswordResetEmail(email)
+        .then( (task) => {
+          console.log(task);
+          Alert.alert("Email de recuperação de senha enviado! 😄");
+        })
+        .catch( (error) => {
+          console.log(error);
+          Alert.alert("Insira um email valido no campo Email!");
+          console.log("falha ao enviar o email");
+        } )
+    }   
   }
 
   function handleGoogleLogin(){
@@ -194,9 +234,11 @@ export default function CardBodyLogin() {
             <TextInput 
               style={[
                 styles.input,
-                (isFocused || isFilled) && { borderColor: color.orangeDark2 }
+                (isFocused || isFilled) && { borderColor: color.orangeDark2 },
+                !isEmailCorrect && { borderColor: color.red }
               ]}
               placeholder="Email"
+              keyboardType="email-address"
               
               onBlur={handleInputBlur}
               onFocus={handleInputFocus}
@@ -204,14 +246,15 @@ export default function CardBodyLogin() {
             />
             <TextInput 
               style={[
-                styles.input
+                styles.input,
+                !isPasswordCorrect && { borderColor: color.red }
               ]}
               placeholder="Senha"
               textContentType="password"
               secureTextEntry={true}
               onChangeText={handleInputPasswordChange}
             />
-            <TouchableOpacity style={{alignSelf: 'flex-end'}}>
+            <TouchableOpacity onPress={handleForgetPassword} style={{alignSelf: 'flex-end'}}>
               <Text style={styles.textInput}>
                 Esqueceu sua senha?
               </Text>
