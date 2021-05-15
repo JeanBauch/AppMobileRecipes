@@ -1,4 +1,4 @@
-# AppMobileRecipes - Enjoy you Meal
+# AppMobileRecipes - Enjoy your Meal
 App desenvolvido para conhecer novas opções de receitas, misturando alguns pratos típicos e mais conhecidos de outros países. Desenvolvido em React Native
 
 Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe?node-id=0%3A1
