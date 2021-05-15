@@ -5,6 +5,16 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 
 ![layoutApp](https://user-images.githubusercontent.com/61170558/112709448-8441a580-8e98-11eb-95ce-d4830847644e.PNG)
 
+# Layout - Home Page
+![LayoutApp01](https://user-images.githubusercontent.com/61170558/118379782-88926100-b5b3-11eb-9ce3-25e44a0d21a6.PNG)
+
+# Detail
+![LayoutApp03](https://user-images.githubusercontent.com/61170558/118379798-c1cad100-b5b3-11eb-8c5e-fc4fef2dc8b4.PNG)
+
+# Login / SignUp
+![LayoutApp02 - Login-SignUp](https://user-images.githubusercontent.com/61170558/118379794-b1b2f180-b5b3-11eb-9dbf-c68b2bf27d22.PNG)
+
+
 # Como Usar
 -> Clone o projeto
 ---> git clone https://github.com/JeanBauch/AppMobileRecipes
