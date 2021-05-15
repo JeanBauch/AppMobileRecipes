@@ -3,12 +3,8 @@ App desenvolvido para conhecer novas opções de receitas, misturando alguns pra
 
 Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe?node-id=0%3A1
 
-![layoutApp](https://user-images.githubusercontent.com/61170558/112709448-8441a580-8e98-11eb-95ce-d4830847644e.PNG)
-
 # Layout - Home Page
 ![LayoutApp01](https://user-images.githubusercontent.com/61170558/118379782-88926100-b5b3-11eb-9ce3-25e44a0d21a6.PNG)
-
-# Detail
 ![LayoutApp03](https://user-images.githubusercontent.com/61170558/118379798-c1cad100-b5b3-11eb-8c5e-fc4fef2dc8b4.PNG)
 
 # Login / SignUp
