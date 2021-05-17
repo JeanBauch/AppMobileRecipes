@@ -1,9 +1,16 @@
-# AppMobileRecipes
-App Mobile de Receitas estrangeiras feito com React Native.
+# AppMobileRecipes - Enjoy your Meal
+App desenvolvido para conhecer novas opções de receitas, misturando alguns pratos típicos e mais conhecidos de outros países. Desenvolvido em React Native
 
 Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe?node-id=0%3A1
 
-![layoutApp](https://user-images.githubusercontent.com/61170558/112709448-8441a580-8e98-11eb-95ce-d4830847644e.PNG)
+# Layout - Home Page
+![LayoutApp01](https://user-images.githubusercontent.com/61170558/118379782-88926100-b5b3-11eb-9ce3-25e44a0d21a6.PNG)
+## Scroll End - Details
+![LayoutApp03](https://user-images.githubusercontent.com/61170558/118379843-0fdfd480-b5b4-11eb-8865-28bd72281d34.PNG)
+
+# Login / SignUp
+![LayoutApp02 - Login-SignUp](https://user-images.githubusercontent.com/61170558/118379794-b1b2f180-b5b3-11eb-9dbf-c68b2bf27d22.PNG)
+
 
 # Como Usar
 -> Clone o projeto
