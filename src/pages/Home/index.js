@@ -42,14 +42,14 @@ const sigla = {
 export default function Home() {
   const navigation = useNavigation();
 
-  const { detail, getDestaques, loaded, selectCategorySlider, handleSelectCategorySlider } = useDetail();
+  const { detail, getDestaques, loaded, selectCategorySlider, handleSelectCategorySlider, reload, setReload } = useDetail();
   const [category, setCategory] = useState([]);
   const [area, setArea] = useState([]);
   const [selectCategories, setSelectCategories] = useState([]);
   const [propsRecipe, setpropsRecipe] = useState([]);
   const [pressSelectFilter, setPressSelectFilter] = useState(false);
   const [prosRecipeSelected, setProsRecipeSelected] = useState([]);
-  const [reload, setReload] = useState(false);
+  //const [reload, setReload] = useState(false);
   const [siglaFilterName, setSiglaFilterName] = useState("");
   const [isReload, setIsReload] = useState(false);
 

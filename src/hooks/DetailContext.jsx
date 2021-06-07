@@ -56,6 +56,7 @@ export function DetailProvider({ children }) {
     const [isRemoveFavoriteList, setIsRemoveFavoriteList] = useState(false);
     const [isLogged, setIsLogged] = useState(false);
     const [selectCategorySlider, setSelectCategorySlider] = useState("");
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         getFavorites();
@@ -126,6 +127,8 @@ export function DetailProvider({ children }) {
             handleSetIslogged,
             selectCategorySlider,
             handleSelectCategorySlider,
+            reload,
+            setReload,
         }}>
             {children}
         </DetailContext.Provider>

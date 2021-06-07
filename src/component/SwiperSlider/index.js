@@ -21,7 +21,7 @@ export default function SwiperSlider() {
       
     >
       <View testID="Dessert" style={styles.slide1}>
-        <TouchableOpacity onPress={()=>{console.log("slider 1 press!!"); handleSelectCategorySlider("Dessert") }}>
+        <TouchableOpacity onPress={()=>{ handleSelectCategorySlider("Dessert") }}>
           <ImageBackground source={{uri: "https://www.themealdb.com/images/media/meals/wpputp1511812960.jpg"}} style={{ flex:1, resizeMode: "cover", justifyContent: "center", alignItems: "center", borderRadius: 20, overflow: "hidden"}}>
             <Image 
               source={require('../../assets/rotulacaoDessert.png')}
@@ -32,7 +32,7 @@ export default function SwiperSlider() {
       </View>
 
       <View testID="Vegetarian" style={styles.slide2}>
-        <TouchableOpacity onPress={()=>{console.log("slider 2 press!!"); handleSelectCategorySlider("Vegetarian") }}>
+        <TouchableOpacity onPress={()=>{ handleSelectCategorySlider("Vegetarian") }}>
           <ImageBackground source={{uri: "https://www.themealdb.com/images/media/meals/rvxxuy1468312893.jpg"}} style={{ flex:1, resizeMode: "cover", justifyContent: "center", alignItems: "center", borderRadius: 20, overflow: "hidden"}}>
             <Image 
               source={require('../../assets/rotulacaoVegetarian.png')}
@@ -43,7 +43,7 @@ export default function SwiperSlider() {
       </View>
 
       <View testID="Pasta" style={styles.slide3}>
-        <TouchableOpacity onPress={()=>{console.log("slider 2 press!!"); handleSelectCategorySlider("Pasta") }}>
+        <TouchableOpacity onPress={()=>{ handleSelectCategorySlider("Pasta") }}>
           <ImageBackground source={{uri: "https://www.themealdb.com/images/media/meals/wtsvxx1511296896.jpg"}} style={{ flex:1, resizeMode: "cover", justifyContent: "center", alignItems: "center", borderRadius: 20, overflow: "hidden"}}>
             <Image 
               source={require('../../assets/rotulacaoPasta.png')}

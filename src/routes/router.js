@@ -1,9 +1,8 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { TouchableOpacity, View, Alert, Text } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
-import { TouchableOpacity, View } from 'react-native';
 
 import Detail from '../pages/Detail';
 import { DetailProvider, useDetail } from '../hooks/DetailContext';
@@ -23,11 +22,13 @@ function Routes(){
                         name="Home"
                         component={AuthRoutes}
                         options={{ 
-                            title: 'Recipe',
-                            headerTitleStyle:{
-                                fontFamily: 'Montserrat_500Medium',
-                                color: color.orangeDark3,
-                                fontSize: 28,
+                            headerTitle: ()=>{
+                                const { relaod, setReload} = useDetail();
+                                return(
+                                    <TouchableOpacity onPress={()=>{setReload(false)}}>
+                                        <Text style={{fontFamily: 'Montserrat_500Medium', color: color.orangeDark3, fontSize: 28,}}>Recipes</Text>
+                                    </TouchableOpacity>
+                                )
                             },
                             headerStyle: {
                                 backgroundColor: color.background
