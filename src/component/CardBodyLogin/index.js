@@ -16,7 +16,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function CardBodyLogin() {
   const navigation = useNavigation();
 
-  const { setIsLogged } = useDetail();
+  const { handleSetIslogged } = useDetail();
   const [selectedScreen, setSelectedScreen] = useState('Login');
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -61,7 +61,7 @@ export default function CardBodyLogin() {
           console.log("Logado com sucesso!");
           setEmail('');
           setPassword('');
-          setIsLogged(true);
+          handleSetIslogged(true);
           navigation.navigate("Home");
         })
         .catch((error) => {
@@ -97,7 +97,7 @@ export default function CardBodyLogin() {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setIsLogged(true);
+        handleSetIslogged(true);
         navigation.navigate("Home");
       })
       .catch((error) => {

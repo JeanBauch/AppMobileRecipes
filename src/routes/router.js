@@ -1,16 +1,16 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator} from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import Home from '../pages/Home';
 import Detail from '../pages/Detail';
 import { DetailProvider, useDetail } from '../hooks/DetailContext';
 import Login from '../pages/Login';
 import color from '../styles/color';
 import AuthRoutes from './tab.routes';
+import { authDatabase } from '../config/firebase';
 
 const Stack = createStackNavigator();
 
@@ -34,7 +34,28 @@ function Routes(){
                             },
                             headerRight: () => {
                                 const navigation = useNavigation();
-                                const { isLogged } = useDetail();
+                                const { isLogged, handleSetIslogged } = useDetail();
+                                
+                                const navigateLogin = () => {
+                                    navigation.navigate('Login');
+                                }
+                                const logOff = () => {
+                                    Alert.alert('Deslogar',"Deseja deslogar?", [
+                                        {
+                                            text: 'Nao!',
+                                            style: 'cancel'
+                                        },
+                                        {
+                                            text: 'Sim!',
+                                            onPress: () => { 
+                                                handleSetIslogged(false);
+                                                authDatabase.signOut();
+                                                navigation.navigate('Login'); 
+                                            }
+                                        }
+                                    ]);
+                                }
+
                                 return(
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity style={{ marginRight: 15 }}>
@@ -45,7 +66,10 @@ function Routes(){
                                             />
                                         </TouchableOpacity>
                                         
-                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigation.navigate('Login')}>
+                                        <TouchableOpacity 
+                                            style={{ marginRight: 15 }} 
+                                            onPress={isLogged? logOff:navigateLogin}
+                                        >
                                             <Feather
                                                 name={isLogged? "user-check" : "user"}
                                                 size={24}

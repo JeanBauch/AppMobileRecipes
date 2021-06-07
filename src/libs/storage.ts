@@ -66,10 +66,20 @@ export async function removeRecipe(id) {
   });
 }
 
+const createHandleNotification = () => {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
+
 export async function saveNotification(recipe) {
   console.log(`DATA: ${recipe.dateNotification}`);
   console.log(`Horario: ${recipe.dateTimeNotification}`);
-
+  createHandleNotification();
   const now = new Date();
 
   const dateDay = recipe.dateNotification.getDate();

@@ -1,13 +1,14 @@
 import React, { useRef, useState, useEffect, forwardRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Modalize } from 'react-native-modalize';
- 
+
 import { api } from '../../services/api';
 import Recipes from '../../component/Recipe';
 import { useDetail } from '../../hooks/DetailContext';
 import color from '../../styles/color';
 import { Load } from '../../component/Load';
+import SwiperSlider from '../../component/SwiperSlider';
 
 const sigla = {
   'American': 'us',
@@ -41,9 +42,9 @@ const sigla = {
 export default function Home() {
   const navigation = useNavigation();
 
+  const { detail, getDestaques, loaded, selectCategorySlider, handleSelectCategorySlider } = useDetail();
   const [category, setCategory] = useState([]);
   const [area, setArea] = useState([]);
-  const { detail, getDestaques, loaded } = useDetail();
   const [selectCategories, setSelectCategories] = useState([]);
   const [propsRecipe, setpropsRecipe] = useState([]);
   const [pressSelectFilter, setPressSelectFilter] = useState(false);
@@ -88,6 +89,17 @@ export default function Home() {
     getSelectFilter();
   }, [pressSelectFilter, reload]) 
 
+  useEffect(()=> {
+    if(selectCategorySlider){
+      setSelectCategories([ ...selectCategories,selectCategorySlider]);
+      setSiglaFilterName("c");
+      setPressSelectFilter(true);
+      setReload(true);
+      setIsReload(false);
+      handleSelectCategorySlider("");
+    }
+  },[selectCategorySlider]);
+
   const getCategory = async () => {
     const {data} = await api.get("categories.php");
     
@@ -116,7 +128,7 @@ export default function Home() {
 
   const getSelectFilter = async () => {
     const filterIDAux = [];
-
+    
     const response = selectCategories.map( async (selectFilter)  => {
         const { data } = await api.get(`filter.php?${siglaFilterName}=${selectFilter}`); 
         filterIDAux.push( data.meals ); 
@@ -222,8 +234,16 @@ export default function Home() {
 
     {!reload ? (
       <ScrollView style={styles.recipesContainer} showsVerticalScrollIndicator={false}>
-    
-      <View style={styles.scrollContainer}>
+        
+        <View style={{ width: '100%', height: 200, marginBottom: '5%'}}>
+          <SwiperSlider />
+        </View>
+
+        <View style={{flex: 1, marginHorizontal: '3%', marginBottom: '3%'}}>
+          <Text style={styles.subTitle}>Destaques</Text>
+        </View>
+
+        <View style={styles.scrollContainer}>
         {
           propsRecipe.map( (pr) => (
               <Recipes
@@ -338,11 +358,16 @@ const styles = StyleSheet.create({
     borderBottomColor: color.lineStyle,
     borderBottomWidth: 2,
   },
+  subTitle: {
+    fontFamily: 'Montserrat_500Medium',
+    fontSize:24,
+    color: color.orangeDark3,
+  },
   recipesContainer:{
     flex: 1,
     marginHorizontal: '3%',
     //marginVertical: '5%'
-    paddingTop: '10%'
+    paddingTop: '5%'
   },
   titleFilter: {
     fontFamily: 'Montserrat_500Medium',
