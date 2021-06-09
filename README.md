@@ -5,8 +5,6 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 
 # Layout - Home Page
 ![LayoutApp01](https://user-images.githubusercontent.com/61170558/118379782-88926100-b5b3-11eb-9ce3-25e44a0d21a6.PNG)
-## Scroll End - Details
-![LayoutApp03](https://user-images.githubusercontent.com/61170558/118379843-0fdfd480-b5b4-11eb-8865-28bd72281d34.PNG)
 
 # Login / SignUp
 ![LayoutApp02 - Login-SignUp](https://user-images.githubusercontent.com/61170558/118379794-b1b2f180-b5b3-11eb-9dbf-c68b2bf27d22.PNG)
