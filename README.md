@@ -20,4 +20,9 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 -> Execute o comando de execucao
 ---> expo start
 
+# Visao do App
+
+![Instagram post - 5](https://user-images.githubusercontent.com/61170558/122657091-b4ff4700-d136-11eb-9f51-fb72bf087f0c.png)
+
+
 
