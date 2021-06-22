@@ -3,12 +3,12 @@ App desenvolvido para conhecer novas opções de receitas, misturando alguns pra
 
 Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe?node-id=0%3A1
 
-# Layout - Home Page
-![LayoutApp00](https://user-images.githubusercontent.com/61170558/121413327-f3795280-c93b-11eb-9d31-354385cf3047.PNG)
+# Layout - App
+![GitHub](https://user-images.githubusercontent.com/61170558/123004410-f0924f00-d38a-11eb-8916-d308448f5b3d.png)
 
-# Login / SignUp
-![LayoutApp02 - Login-SignUp](https://user-images.githubusercontent.com/61170558/118379794-b1b2f180-b5b3-11eb-9dbf-c68b2bf27d22.PNG)
+# Link do APK
 
+<a href="https://drive.google.com/file/d/1FkMzXIEUI22_cc8tM5BMLKz28lTy43Z9/view?usp=sharing"> Enjoy your meals.apk</a>
 
 # Como Usar
 -> Clone o projeto
