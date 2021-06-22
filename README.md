@@ -8,7 +8,7 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 
 # Link do APK
 
-<a href="https://drive.google.com/file/d/1FkMzXIEUI22_cc8tM5BMLKz28lTy43Z9/view?usp=sharing"> Enjoy your meals.apk</a>
+<a href="https://drive.google.com/file/d/1FkMzXIEUI22_cc8tM5BMLKz28lTy43Z9/view?usp=sharing" target="_blank"> Enjoy your meals.apk</a>
 
 # Como Usar
 -> Clone o projeto
