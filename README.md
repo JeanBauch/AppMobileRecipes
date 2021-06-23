@@ -19,7 +19,7 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 - [x] Tela listando todos os detalhes da receita
 - [x] Push Notifications para lembrete da receita
 - [x] Conexão com o firebase
-- [x] Consumido da API
+- [x] Consumo da API
 
 # Link do APK
 
