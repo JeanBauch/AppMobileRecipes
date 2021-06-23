@@ -40,4 +40,8 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 ![Instagram post - 5](https://user-images.githubusercontent.com/61170558/122657091-b4ff4700-d136-11eb-9f51-fb72bf087f0c.png)
 
 
+# Autor
+
+Autoria própria - Jean Augusto Bauch
+✉️  - jean.bauch06@gmail.com
 
