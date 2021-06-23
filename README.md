@@ -8,6 +8,19 @@ Link do figma: https://www.figma.com/file/3YgXdin1gJtxHm55BdHHgI/AppMobileRecipe
 # Layout - App
 ![GitHub](https://user-images.githubusercontent.com/61170558/123004410-f0924f00-d38a-11eb-8916-d308448f5b3d.png)
 
+## Features
+- [x] SplashScreen
+- [x] Tela de Login
+- [x] Tela de signUp
+- [x] Tela Home com destaque e carrossel
+- [x] Tela para receitas favoritas
+- [x] Modais para pesquisa de filtro (Categoria)
+- [x] Modais para pesquisa de filtro (País)
+- [x] Tela listando todos os detalhes da receita
+- [x] Push Notifications para lembrete da receita
+- [x] Conexão com o firebase
+- [x] Consumido da API
+
 # Link do APK
 
 <a href="https://drive.google.com/file/d/1FkMzXIEUI22_cc8tM5BMLKz28lTy43Z9/view?usp=sharing" target="_blank"> Enjoy your meals.apk</a>
